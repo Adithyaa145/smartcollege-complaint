@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Profile - SmartCollege</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Top Navbar Header -->
+        <header class="navbar">
+            <div class="brand">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SmartCollege Portal</span>
+            </div>
+            <div class="nav-user">
+                <span id="navUserName">Loading...</span>
+                <a href="my.complaint.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;background:#fffbeb;color:#d97706;font-size:13px;font-weight:600;text-decoration:none;border:1px solid #fde68a;transition:all 0.2s;" onmouseover="this.style.background='#f59e0b';this.style.color='white';" onmouseout="this.style.background='#fffbeb';this.style.color='#d97706';">
+                    <i class="fa-solid fa-list-check"></i> My Submissions
+                </a>
+                <button onclick="logout()" class="btn-logout-nav">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Banner/Profile Area -->
+        <section class="profile-banner">
+            <div class="banner-gradient"></div>
+            <div class="profile-meta-content">
+                <div class="avatar-section">
+                    <img id="profileImage" src="https://ui-avatars.com/api/?name=Faculty&background=eab308&color=000&size=128&bold=true" alt="Profile Picture">
+                </div>
+                <div class="identity-section">
+                    <div class="identity-header">
+                        <h2 id="name">Loading Submitter...</h2>
+                        <span id="roleBadge" class="role-badge faculty">Faculty</span>
+                    </div>
+                    <p class="contact-details">
+                        <span id="emailDetail"><i class="fa-regular fa-envelope"></i> loading...</span>
+                        <span id="branchDetail"><i class="fa-solid fa-sitemap"></i> CSE</span>
+                    </p>
+                </div>
+                
+                <!-- Dynamic Stats Cards -->
+                <div class="dynamic-stats-grid">
+                    <div class="stat-card-small">
+                        <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Posted</span>
+                            <span class="stat-value" id="stat-total">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-small">
+                        <div class="stat-icon warning"><i class="fa-solid fa-clock"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Active / Pending</span>
+                            <span class="stat-value" id="stat-pending">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-small">
+                        <div class="stat-icon success"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Resolved</span>
+                            <span class="stat-value" id="stat-resolved">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Area -->
+        <main class="workspace-area">
+            <!-- Categories Grid for Filing Complaints -->
+            <section class="workspace-section">
+                <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> File a Complaint</h3>
+                <p class="section-subtitle">Select a category below to submit a feedback or issue report</p>
+                
+                <div class="menu-grid">
+                    <div class="card classroom-card" onclick="openComplaint('classroom')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-chalkboard"></i></div>
+                        <h4>Classroom Issues</h4>
+                        <p>Desks, chairs, whiteboards, doors and lighting</p>
+                    </div>
+
+                    <div class="card hostel-card" onclick="openComplaint('projector')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-tv"></i></div>
+                        <h4>Projector</h4>
+                        <p>Bulbs, remote controls, HDMI/VGA cables, projection audio</p>
+                    </div>
+
+                    <div class="card labs-card" onclick="openComplaint('lab')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-desktop"></i></div>
+                        <h4>Lab Equipment</h4>
+                        <p>IDE, computer hardware, network connections, LAN cables</p>
+                    </div>
+
+                    <div class="card transport-card" onclick="openComplaint('internet')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-wifi"></i></div>
+                        <h4>Internet</h4>
+                        <p>Wi-Fi dead zones, captive portal login, speed, bandwidth</p>
+                    </div>
+
+                    <div class="card fees-card" onclick="openComplaint('electrical')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-bolt"></i></div>
+                        <h4>Electrical</h4>
+                        <p>Tripped fuses, socket sparking, exposed wires, switches</p>
+                    </div>
+
+                    <div class="card notifications-card" onclick="openComplaint('maintenance')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-tools"></i></div>
+                        <h4>Maintenance</h4>
+                        <p>Infra repairs, roof leaks, elevator operation, garden pruning</p>
+                    </div>
+
+                    <div class="card feedback-card" onclick="openComplaint('feedback')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-comment-dots"></i></div>
+                        <h4>Feedback</h4>
+                        <p>General recommendations, UI improvements, bugs reporting</p>
+                    </div>
+
+                    <div class="card others-card" onclick="openComplaint('others')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-ellipsis"></i></div>
+                        <h4>Others</h4>
+                        <p>Unlisted issues, custom requests, personal support</p>
+                    </div>
+
+                    <div class="card general-card" onclick="openComplaint('general')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-circle-plus"></i></div>
+                        <h4>General</h4>
+                        <p>Campus logistics, events, lost and found reports</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Shortcuts Section -->
+            <section class="workspace-section">
+                <h3 class="section-title"><i class="fa-solid fa-circle-nodes"></i> Action Center</h3>
+                
+                <div class="shortcuts-grid">
+                    <a href="my.complaint.html" class="shortcut-link-card my-complaints">
+                        <div class="shortcut-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="shortcut-text">
+                            <h4>My Submissions</h4>
+                            <p>Track history, view resolution updates, or close issues</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long arrow"></i>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script Execution -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+            // 1. Fetch Profile Data
+            const profileRes = await fetch("http://localhost:3000/me", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (!profileRes.ok) {
+                localStorage.clear();
+                window.location.href = "login.html";
+                return;
+            }
+            
+            const user = await profileRes.json();
+            localStorage.setItem("user", JSON.stringify(user));
+            
+            // Render user details
+            document.getElementById("name").innerText = user.name;
+            document.getElementById("navUserName").innerText = user.name;
+            document.getElementById("emailDetail").innerHTML = `<i class="fa-regular fa-envelope"></i> ` + user.email;
+            document.getElementById("branchDetail").innerHTML = `<i class="fa-solid fa-sitemap"></i> ` + (user.branch || 'CSE');
+            
+            const roleBadge = document.getElementById("roleBadge");
+            roleBadge.innerText = user.role.toUpperCase();
+            roleBadge.className = `role-badge ${user.role.toLowerCase()}`;
+
+            // Update Avatar image initials
+            document.getElementById("profileImage").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=eab308&color=000&size=128&bold=true`;
+
+            // 2. Fetch Personal Complaints Stats
+            const complaintsRes = await fetch("http://localhost:3000/my-complaints", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            
+            if (complaintsRes.ok) {
+                const complaints = await complaintsRes.json();
+                document.getElementById("stat-total").innerText = complaints.length;
+                document.getElementById("stat-pending").innerText = complaints.filter(c => c.status !== "Resolved").length;
+                document.getElementById("stat-resolved").innerText = complaints.filter(c => c.status === "Resolved").length;
+            }
+            
+        } catch(err) {
+            console.error("Error loading user profile dashboard:", err);
+        }
+    });
+
+    function openComplaint(type){
+        window.location.href = "complaint.html?type=" + type;
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = "login.html";
+    }
+    </script>
+</body>
+</html>

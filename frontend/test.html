@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Test Complaint</h2>
+
+<form id="form">
+  <input type="text" id="2303031050230" placeholder="Adithya"><br><br>
+  <button type="submit">Send</button>
+</form>
+
+<script>
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  console.log("Button clicked"); // 🔥 ADD THIS
+
+  const formData = new FormData();
+  formData.append("student_name", document.getElementById("name").value);
+
+  try {
+    const res = await fetch("http://localhost:3000/submit", {
+      method: "POST",
+      body: formData
+    });
+
+    console.log("Response:", res); // 🔥 ADD THIS
+
+    alert("Sent to backend!");
+  } catch (err) {
+    console.error("Error:", err); // 🔥 ADD THIS
+  }
+});
+</script>
+
+</body>
+</html>

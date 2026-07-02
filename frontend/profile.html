@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - SmartCollege</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Top Navbar Header -->
+        <header class="navbar">
+            <div class="brand">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SmartCollege Portal</span>
+            </div>
+            <div class="nav-user">
+                <!-- Notifications Bell -->
+                <div class="notifications-bell-wrapper" onclick="showNotificationsFeed()" style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; transition: all 0.2s; margin-right: 5px;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
+                    <i class="fa-solid fa-bell" style="color: #64748b; font-size: 16px;"></i>
+                    <span id="notif-badge" style="display: none; position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #ef4444; border: 2px solid white;"></span>
+                </div>
+                <span id="navUserName">Loading...</span>
+                <a href="my.complaint.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;background:#eff6ff;color:#4f46e5;font-size:13px;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;transition:all 0.2s;" onmouseover="this.style.background='#4f46e5';this.style.color='white';" onmouseout="this.style.background='#eff6ff';this.style.color='#4f46e5';">
+                    <i class="fa-solid fa-list-check"></i> My Submissions
+                </a>
+                <button onclick="logout()" class="btn-logout-nav">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Banner/Profile Area -->
+        <section class="profile-banner">
+            <div class="banner-gradient"></div>
+            <div class="profile-meta-content">
+                <div class="avatar-section">
+                    <img id="profileImage" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=128&bold=true" alt="Profile Picture">
+                </div>
+                <div class="identity-section">
+                    <div class="identity-header">
+                        <h2 id="name">Loading Submitter...</h2>
+                        <span id="roleBadge" class="role-badge">Student</span>
+                        <button onclick="openEditProfileModal()" style="margin-left: 15px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.1); color: white; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.2)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)';">
+                            <i class="fa-solid fa-pen"></i> Edit Profile
+                        </button>
+                    </div>
+                    <p class="contact-details">
+                        <span id="emailDetail"><i class="fa-regular fa-envelope"></i> loading...</span>
+                        <span id="branchDetail"><i class="fa-solid fa-sitemap"></i> CSE</span>
+                    </p>
+                </div>
+                
+                <!-- Dynamic Stats Cards -->
+                <div class="dynamic-stats-grid">
+                    <div class="stat-card-small">
+                        <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Posted</span>
+                            <span class="stat-value" id="stat-total">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-small">
+                        <div class="stat-icon warning"><i class="fa-solid fa-clock"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Active / Pending</span>
+                            <span class="stat-value" id="stat-pending">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-small">
+                        <div class="stat-icon success"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Resolved</span>
+                            <span class="stat-value" id="stat-resolved">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Area -->
+        <main class="workspace-area">
+            <!-- Categories Grid for Filing Complaints -->
+            <section class="workspace-section">
+                <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> File a Complaint</h3>
+                <p class="section-subtitle">Select a category below to submit a feedback or issue report</p>
+                
+                <div class="menu-grid">
+                    <div class="card classroom-card" onclick="openComplaint('classroom')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-chalkboard"></i></div>
+                        <h4>Classrooms</h4>
+                        <p>Projectors, desks, lighting, electrical sockets</p>
+                    </div>
+
+                    <div class="card hostel-card" onclick="openComplaint('hostel')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-bed"></i></div>
+                        <h4>Hostel</h4>
+                        <p>Water, room cleaning, locking systems, security</p>
+                    </div>
+
+                    <div class="card labs-card" onclick="openComplaint('labs')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-desktop"></i></div>
+                        <h4>Labs</h4>
+                        <p>PC boot errors, compilers, hardware, network ports</p>
+                    </div>
+
+                    <div class="card transport-card" onclick="openComplaint('transport')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-bus"></i></div>
+                        <h4>Transport</h4>
+                        <p>Bus delays, seating, routes, driver reporting</p>
+                    </div>
+
+                    <div class="card fees-card" onclick="openComplaint('fees')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-wallet"></i></div>
+                        <h4>Fees</h4>
+                        <p>Failed transactions, billing errors, refunds</p>
+                    </div>
+
+                    <div class="card notifications-card" onclick="openComplaint('notifications')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-bell"></i></div>
+                        <h4>Notifications</h4>
+                        <p>Email delivery, SMS warnings, push notifications</p>
+                    </div>
+
+                    <div class="card feedback-card" onclick="openComplaint('feedback')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-comment-dots"></i></div>
+                        <h4>Feedback</h4>
+                        <p>UI improvements, general thoughts, appreciation</p>
+                    </div>
+
+                    <div class="card others-card" onclick="openComplaint('others')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-ellipsis"></i></div>
+                        <h4>Others</h4>
+                        <p>Unlisted issues, custom requests, personal support</p>
+                    </div>
+
+                    <div class="card general-card" onclick="openComplaint('general')">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-circle-plus"></i></div>
+                        <h4>General</h4>
+                        <p>Campus logistics, events, lost and found reports</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Shortcuts Section -->
+            <section class="workspace-section">
+                <h3 class="section-title"><i class="fa-solid fa-circle-nodes"></i> Action Center</h3>
+                
+                <div class="shortcuts-grid">
+                    <a href="my.complaint.html" class="shortcut-link-card my-complaints">
+                        <div class="shortcut-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="shortcut-text">
+                            <h4>My Submissions</h4>
+                            <p>Track history, view resolution updates, or close issues</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long arrow"></i>
+                    </a>
+
+                    <a href="class.complaint.html" class="shortcut-link-card class-issues">
+                        <div class="shortcut-icon"><i class="fa-solid fa-people-group"></i></div>
+                        <div class="shortcut-text">
+                            <h4>Class Issues</h4>
+                            <p>Upvote shared classroom complaints for immediate action</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long arrow"></i>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script Execution -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+            // 1. Fetch Profile Data
+            const profileRes = await fetch("http://localhost:3000/me", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (!profileRes.ok) {
+                localStorage.clear();
+                window.location.href = "login.html";
+                return;
+            }
+            
+            const user = await profileRes.json();
+            localStorage.setItem("user", JSON.stringify(user));
+            
+            // Render user details
+            document.getElementById("name").innerText = user.name;
+            document.getElementById("navUserName").innerText = user.name;
+            document.getElementById("emailDetail").innerHTML = `<i class="fa-regular fa-envelope"></i> ` + user.email;
+            document.getElementById("branchDetail").innerHTML = `<i class="fa-solid fa-sitemap"></i> ` + (user.branch || 'CSE');
+            
+            const roleBadge = document.getElementById("roleBadge");
+            roleBadge.innerText = user.role.toUpperCase();
+            roleBadge.className = `role-badge ${user.role.toLowerCase()}`;
+
+            // Update Avatar image initials
+            document.getElementById("profileImage").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128&bold=true`;
+
+            // 2. Fetch Personal Complaints Stats
+            const complaintsRes = await fetch("http://localhost:3000/my-complaints", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            
+            if (complaintsRes.ok) {
+                const complaints = await complaintsRes.json();
+                document.getElementById("stat-total").innerText = complaints.length;
+                document.getElementById("stat-pending").innerText = complaints.filter(c => c.status !== "Resolved").length;
+                document.getElementById("stat-resolved").innerText = complaints.filter(c => c.status === "Resolved").length;
+            }
+            
+        } catch(err) {
+            console.error("Error loading user profile dashboard:", err);
+        }
+    });
+
+    function openComplaint(type){
+        window.location.href = "complaint.html?type=" + type;
+    }
+
+    async function openEditProfileModal() {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const name = user.name || "";
+        const branch = user.branch || "CSE";
+
+        const { value: formValues } = await Swal.fire({
+            title: 'Edit Profile',
+            html: `
+                <div style="text-align: left; font-family: 'Outfit', sans-serif;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 6px;">Full Name</label>
+                        <input id="edit-name" class="swal2-input" value="${name}" placeholder="Enter full name" style="width: 100%; margin: 0; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 6px;">Branch</label>
+                        <select id="edit-branch" class="swal2-input" style="width: 100%; margin: 0; font-size: 14px; padding: 10px; box-sizing: border-box; height: auto;">
+                            <option value="CSE" ${branch === 'CSE' ? 'selected' : ''}>Computer Science (CSE)</option>
+                            <option value="IT" ${branch === 'IT' ? 'selected' : ''}>Information Tech (IT)</option>
+                            <option value="MECH" ${branch === 'MECH' ? 'selected' : ''}>Mechanical Eng.</option>
+                            <option value="ECE" ${branch === 'ECE' ? 'selected' : ''}>Electronics (ECE)</option>
+                            <option value="CIVIL" ${branch === 'CIVIL' ? 'selected' : ''}>Civil Eng.</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 6px;">New Password (Optional)</label>
+                        <input id="edit-password" type="password" class="swal2-input" placeholder="Leave blank to keep current password" style="width: 100%; margin: 0; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                </div>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonColor: '#4f46e5',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Save Changes',
+            preConfirm: () => {
+                const updatedName = document.getElementById('edit-name').value;
+                const updatedBranch = document.getElementById('edit-branch').value;
+                const updatedPassword = document.getElementById('edit-password').value;
+                
+                if (!updatedName) {
+                    Swal.showValidationMessage('Full name is required');
+                    return false;
+                }
+                return { name: updatedName, branch: updatedBranch, password: updatedPassword };
+            }
+        });
+
+        if (!formValues) return;
+
+        Swal.showLoading();
+
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch("http://localhost:3000/update-profile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(formValues)
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+                Swal.fire({
+                    title: 'Saved!',
+                    text: 'Your profile has been updated successfully.',
+                    icon: 'success',
+                    confirmButtonColor: '#4f46e5'
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    title: 'Update Failed',
+                    text: data.error || 'Failed to update profile.',
+                    icon: 'error',
+                    confirmButtonColor: '#4f46e5'
+                });
+            }
+
+        } catch (error) {
+            console.error("Profile update error:", error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Could not connect to the server.',
+                icon: 'error',
+                confirmButtonColor: '#4f46e5'
+            });
+        }
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = "login.html";
+    }
+
+    let activeNotifications = [];
+
+    async function checkNotifications() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+            const res = await fetch("http://localhost:3000/notifications", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                activeNotifications = data;
+                const badge = document.getElementById("notif-badge");
+                if (badge) {
+                    if (data.length > 0) {
+                        badge.style.display = "block";
+                    } else {
+                        badge.style.display = "none";
+                    }
+                }
+            }
+        } catch(err) {
+            console.error("Notifications poll error:", err);
+        }
+    }
+
+    // Check every 10 seconds
+    setInterval(checkNotifications, 10000);
+    // Initial check
+    checkNotifications();
+
+    async function showNotificationsFeed() {
+        const token = localStorage.getItem("token");
+        if (activeNotifications.length === 0) {
+            Swal.fire({
+                title: 'Notifications',
+                text: 'You have no unread notifications.',
+                icon: 'info',
+                confirmButtonColor: '#4f46e5'
+            });
+            return;
+        }
+
+        let notifListHtml = "";
+        activeNotifications.forEach(n => {
+            const dateStr = new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            notifListHtml += `
+                <div style="text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #0f172a;">
+                    <div style="font-weight: 500;">${n.text}</div>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;">${dateStr}</div>
+                </div>
+            `;
+        });
+
+        await Swal.fire({
+            title: 'Unread Notifications 🔔',
+            html: `
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px;">
+                    ${notifListHtml}
+                </div>
+            `,
+            confirmButtonColor: '#4f46e5',
+            confirmButtonText: 'Mark all as read',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            cancelButtonColor: '#64748b'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const markRes = await fetch("http://localhost:3000/notifications/read-all", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        }
+                    });
+                    if (markRes.ok) {
+                        activeNotifications = [];
+                        const badge = document.getElementById("notif-badge");
+                        if (badge) badge.style.display = "none";
+                        Swal.fire({ title: 'Read!', text: 'All notifications cleared.', icon: 'success', timer: 1200, showConfirmButton: false });
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        });
+    }
+    </script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal Register - SmartCollege</title>
+<!-- Google Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ── THEME & RESET ── */
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #eff6ff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #cbd5e1;
+    --border-focus: #4f46e5;
+    --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+    --shadow-premium: 0 25px 50px -12px rgba(15, 23, 42, 0.12);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background: var(--bg-gradient);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ── CONTAINER ── */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    height: 680px;
+    background: #ffffff;
+    display: flex;
+    border-radius: 28px;
+    box-shadow: var(--shadow-premium);
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── LEFT SECTION (FORM) ── */
+.left {
+    width: 50%;
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.left h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.left p.subtitle {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+.form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex: 1;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 20px;
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.input-wrapper input, .input-wrapper select {
+    width: 100%;
+    padding: 16px 20px 16px 56px;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    font-size: 16px;
+    color: var(--text-main);
+    background-color: #f8fafc;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.input-wrapper input:focus, .input-wrapper select:focus {
+    border-color: var(--border-focus);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* ── BUTTONS ── */
+.login-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    transition: all 0.25s ease;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+}
+
+.register-section {
+    margin-top: 36px;
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-muted);
+}
+
+.register-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 4px;
+    transition: color 0.2s;
+}
+
+.register-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* ── RIGHT SECTION (BANNER) ── */
+.right {
+    width: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.right img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.right-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.5) 0%, rgba(67, 56, 202, 0.8) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 50px;
+    color: #ffffff;
+}
+
+.right-overlay-content {
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.right-overlay h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.right-overlay p {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .container {
+        height: auto;
+        flex-direction: column;
+    }
+    .left, .right {
+        width: 100%;
+    }
+    .right {
+        height: 250px;
+    }
+    .left {
+        padding: 40px 30px;
+    }
+}
+</style>
+
+<script>
+async function sendOTP() {
+    const email = document.getElementById("email").value;
+    if (!email) {
+        Swal.fire({
+            title: 'Email Required',
+            text: 'Please enter your email address first.',
+            icon: 'warning',
+            confirmButtonColor: '#4f46e5'
+        });
+        return;
+    }
+
+    const btn = document.getElementById("btnSendOtp");
+    btn.disabled = true;
+    btn.innerText = "Sending...";
+
+    try {
+        const response = await fetch("http://localhost:3000/send-otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+        btn.disabled = false;
+        btn.innerText = "Resend OTP";
+
+        if (response.ok) {
+            Swal.fire({
+                title: 'Code Sent!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonColor: '#4f46e5'
+            });
+            document.getElementById("otpGroup").style.display = "block";
+            document.getElementById("otp").required = true;
+            
+            if (data.mockOtp) {
+                console.log("Mock OTP received:", data.mockOtp);
+                document.getElementById("otp").value = data.mockOtp;
+            }
+        } else {
+            Swal.fire({
+                title: 'Failed to Send',
+                text: data.error || 'Failed to send OTP code.',
+                icon: 'error',
+                confirmButtonColor: '#4f46e5'
+            });
+        }
+    } catch (error) {
+        console.error("OTP Error:", error);
+        btn.disabled = false;
+        btn.innerText = "Send OTP";
+        Swal.fire({
+            title: 'Error',
+            text: 'Could not connect to the server.',
+            icon: 'error',
+            confirmButtonColor: '#4f46e5'
+        });
+    }
+}
+
+async function handleRegister(event) {
+    event.preventDefault();
+    
+    const role = document.getElementById("role").value;
+    const branch = document.getElementById("branch").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const otp = document.getElementById("otp").value;
+
+    if (!otp) {
+        Swal.fire({
+            title: 'Verification Code Required',
+            text: 'Please send and enter the verification code (OTP) to complete registration.',
+            icon: 'warning',
+            confirmButtonColor: '#4f46e5'
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password, role, branch, otp })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            Swal.fire({
+                title: 'Registration Successful!',
+                text: data.message || 'You can now log in.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "login.html";
+            });
+        } else {
+            Swal.fire({
+                title: 'Registration Failed',
+                text: data.error || 'Registration failed',
+                icon: 'error',
+                confirmButtonColor: '#4f46e5'
+            });
+        }
+    } catch (error) {
+        console.error("Error connecting to server:", error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Could not connect to the server.',
+            icon: 'error',
+            confirmButtonColor: '#4f46e5'
+        });
+    }
+}
+
+function goToLogin(){
+    window.location.href = "login.html";
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- Form Side -->
+    <div class="left">
+        <div class="brand-title">
+            <i class="fa-solid fa-graduation-cap"></i> SmartCollege
+        </div>
+        <h1>Create Account</h1>
+        <p class="subtitle">Join the college grievance management portal</p>
+
+        <form onsubmit="handleRegister(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="role">User Role</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <select id="role">
+                            <option value="student">Student</option>
+                            <option value="admin">Admin</option>
+                            <option value="faculty">Faculty</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">Branch / Division</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <select id="branch">
+                            <option value="CSE">Computer Science (CSE)</option>
+                            <option value="IT">Information Tech (IT)</option>
+                            <option value="MECH">Mechanical Eng.</option>
+                            <option value="ECE">Electronics (ECE)</option>
+                            <option value="CIVIL">Civil Eng.</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-user"></i>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrapper" style="display: flex; gap: 8px; width: 100%;">
+                    <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                        <i class="fa-regular fa-envelope" style="position: absolute; left: 20px;"></i>
+                        <input type="email" id="email" placeholder="Enter your email" required style="padding-left: 56px;">
+                    </div>
+                    <button type="button" onclick="sendOTP()" id="btnSendOtp" style="padding: 14px 20px; border-radius: 12px; border: 1px solid var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; white-space: nowrap;">
+                        Send OTP
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group" id="otpGroup" style="display: none;">
+                <label for="otp">Verification Code (OTP)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <input type="text" id="otp" placeholder="Enter 6-digit OTP code">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Create a strong password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn">Register</button>
+        </form>
+
+        <div class="register-section">
+            Already have an account? 
+            <a href="#" class="register-link" onclick="goToLogin()">Login Here</a>
+        </div>
+    </div>
+
+    <!-- Image Banner Side -->
+    <div class="right">
+        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop">
+    </div>
+</div>
+
+</body>
+</html>

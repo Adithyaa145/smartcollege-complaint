@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint Form – SmartCollege</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><link rel="stylesheet" href="chatbot.css">
+
+<style>
+*, *::before, *::after {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', 'Segoe UI', Arial, sans-serif;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+    height: 64px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+}
+.brand i { color: #4f46e5; font-size: 22px; }
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* breadcrumb trail */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #64748b;
+}
+.breadcrumb a {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s;
+}
+.breadcrumb a:hover { color: #4338ca; }
+.breadcrumb span { color: #94a3b8; }
+
+.btn-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-back {
+    background: #f8fafc;
+    color: #0f172a;
+}
+.btn-back:hover {
+    background: #4f46e5;
+    color: white;
+    border-color: #4f46e5;
+    transform: translateX(-2px);
+}
+
+.btn-logout {
+    background: #fee2e2;
+    color: #ef4444;
+    border-color: transparent;
+}
+.btn-logout:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* ── PAGE BODY ── */
+body {
+    background: linear-gradient(rgba(15, 32, 39, 0.72), rgba(44, 83, 100, 0.72)),
+        url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop')
+        no-repeat center center / cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.page-wrap {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px 20px 60px;
+}
+
+.container {
+    max-width: 800px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    padding: 44px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.6);
+    animation: slide-up 0.45s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+@keyframes slide-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FORM HEADER ── */
+.form-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-header .form-icon {
+    width: 56px; height: 56px;
+    background: #eff6ff;
+    color: #3b82f6;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 14px;
+}
+
+.form-header h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.form-header p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* ── SECTION LABELS ── */
+.section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #94a3b8;
+    margin: 28px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #f1f5f9;
+}
+
+/* ── INPUTS ── */
+.row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.field-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-wrap label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    background: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.25s;
+    color: #1e293b;
+    font-family: 'Outfit', sans-serif;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+}
+
+input:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+textarea {
+    height: 130px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    border: 2px dashed #cbd5e1;
+    padding: 18px;
+    background: #f8fafc;
+    cursor: pointer;
+    color: #64748b;
+}
+
+input[type="file"]:hover {
+    border-color: #4f46e5;
+    background: #eff6ff;
+}
+
+/* ── SUBMIT BTN ── */
+.submit-btn {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 14px rgba(79,70,229,0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(79,70,229,0.38);
+}
+
+.submit-btn i { font-size: 16px; }
+
+.submit-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* SweetAlert2 popup custom style */
+.swal-custom-popup {
+    border-radius: 20px !important;
+    padding: 32px !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+.swal-custom-confirm, .swal-custom-cancel {
+    border-radius: 10px !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 10px 22px !important;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+    .navbar { padding: 0 16px; }
+    .breadcrumb { display: none; }
+    .row { flex-direction: column; gap: 12px; }
+    .container { padding: 24px 20px; }
+    .page-wrap { padding: 24px 12px 40px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+    <a href="#" class="brand" onclick="goDashboard()">
+        <i class="fa-solid fa-graduation-cap"></i>
+        SmartCollege Portal
+    </a>
+
+    <div class="breadcrumb" id="breadcrumbNav">
+        <a href="#" onclick="goDashboard()"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <span>/</span>
+        <span id="breadcrumbCurrent" style="color:#0f172a; font-weight:600;">Complaint Form</span>
+    </div>
+
+    <div class="nav-actions">
+        <button class="btn-nav btn-back" onclick="goDashboard()">
+            <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </button>
+        <button class="btn-nav btn-logout" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+    </div>
+</nav>
+
+<!-- ══ FORM ══ -->
+<div class="page-wrap">
+    <div class="container">
+
+        <div class="form-header">
+            <div class="form-icon"><i class="fa-solid fa-flag" id="formIcon"></i></div>
+            <h2 id="formTitle">Complaint Form</h2>
+            <p>Fill in the details below to submit your complaint. We'll get back to you promptly.</p>
+        </div>
+
+        <form id="complaintForm">
+
+            <div class="section-label"><i class="fa-solid fa-user"></i> Your Information</div>
+            <div class="row">
+                <div class="field-wrap">
+                    <label>Full Name</label>
+                    <input type="text" id="student_name" placeholder="Your full name">
+                </div>
+                <div class="field-wrap">
+                    <label>Contact Number</label>
+                    <input type="text" id="phone" placeholder="Phone number">
+                </div>
+            </div>
+            <div class="row">
+                <div class="field-wrap">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="Email">
+                </div>
+                <div class="field-wrap">
+                    <label>Room / Area</label>
+                    <input type="text" id="room" placeholder="e.g. Block A – Room 204">
+                </div>
+            </div>
+
+            <div class="section-label"><i class="fa-solid fa-triangle-exclamation"></i> Complaint Details</div>
+            <div class="row">
+                <div class="field-wrap">
+                    <label>Category</label>
+                    <select id="category" multiple size="3">
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+                <div class="field-wrap">
+                    <label>Issue Type</label>
+                    <select id="issue" multiple size="3">
+                        <option value="">Select Issue</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-wrap" style="margin-bottom:16px;">
+                <label>Description</label>
+                <textarea id="description" placeholder="Describe your complaint in detail..."></textarea>
+            </div>
+
+            <div class="field-wrap">
+                <label>Attach Image (optional)</label>
+                <input type="file" id="image" accept="image/*">
+                <span id="ocrStatus" style="display: none; font-size: 12px; font-weight: 600; color: #4f46e5; margin-top: 4px;"><i class="fa-solid fa-spinner fa-spin"></i> AI scanning image for text extraction...</span>
+            </div>
+
+            <div class="field-wrap" style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                <input type="checkbox" id="anonymous" style="width: 16px; height: 16px; cursor: pointer;">
+                <label for="anonymous" style="margin: 0; font-weight: 500; font-size: 13.5px; cursor: pointer; color: #334155;">Submit this complaint anonymously</label>
+            </div>
+
+            <div id="similarityWarningBlock" style="display: none; margin-bottom: 16px;"></div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-paper-plane"></i> Submit Complaint
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Role-aware dashboard redirect
+    function goDashboard() {
+        const userStr = localStorage.getItem('user');
+        if (!userStr) { window.location.href = 'login.html'; return; }
+        const user = JSON.parse(userStr);
+        if (user.role === 'faculty') window.location.href = 'faculty.html';
+        else window.location.href = 'profile.html';
+    }
+
+    // Role-aware logout
+    function logout() {
+        localStorage.clear();
+        window.location.href = 'login.html';
+    }
+
+    // Update breadcrumb with complaint type
+    const params = new URLSearchParams(window.location.search);
+    const typeParam = params.get('type');
+    if (typeParam) {
+        const formatted = typeParam.charAt(0).toUpperCase() + typeParam.slice(1) + ' Complaint';
+        const el = document.getElementById('breadcrumbCurrent');
+        if (el) el.textContent = formatted;
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="complaint.js"></script>
+<script src="chatbot.js"></script>
+</body>
+</html>

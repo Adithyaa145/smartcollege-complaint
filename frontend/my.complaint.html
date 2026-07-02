@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Submissions – SmartCollege Portal</title>
+    <meta name="description" content="Track and manage all your submitted complaints and issues on SmartCollege Portal.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="my.complaint.css">
+    <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+
+    <!-- ══════════════ TOP NAVBAR ══════════════ -->
+    <header class="navbar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>SmartCollege Portal</span>
+        </div>
+        <div class="nav-right" style="display: flex; align-items: center; gap: 12px;">
+            <!-- Notifications Bell -->
+            <div class="notifications-bell-wrapper" onclick="showNotificationsFeed()" style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
+                <i class="fa-solid fa-bell" style="color: #64748b; font-size: 16px;"></i>
+                <span id="notif-badge" style="display: none; position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #ef4444; border: 2px solid white;"></span>
+            </div>
+            <span class="nav-username" id="navUsername">Loading...</span>
+            <button class="btn-back" onclick="goBack()">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </button>
+        </div>
+    </header>
+
+    <!-- ══════════════ HERO BANNER ══════════════ -->
+    <section class="hero-banner">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <div class="avatar-wrap">
+                <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Avatar">
+                <span class="avatar-ring"></span>
+            </div>
+            <div class="hero-info">
+                <div class="hero-name-row">
+                    <h1 id="welcomeUser">Loading...</h1>
+                    <span class="role-chip" id="roleChip">Student</span>
+                </div>
+                <p class="hero-email" id="heroEmail"><i class="fa-regular fa-envelope"></i> loading...</p>
+            </div>
+            <!-- Stats row inside banner -->
+            <div class="hero-stats">
+                <div class="hstat">
+                    <span class="hstat-val" id="statTotal">–</span>
+                    <span class="hstat-lbl">Total</span>
+                </div>
+                <div class="hstat-divider"></div>
+                <div class="hstat">
+                    <span class="hstat-val warning" id="statPending">–</span>
+                    <span class="hstat-lbl">Pending</span>
+                </div>
+                <div class="hstat-divider"></div>
+                <div class="hstat">
+                    <span class="hstat-val info" id="statProgress">–</span>
+                    <span class="hstat-lbl">In Progress</span>
+                </div>
+                <div class="hstat-divider"></div>
+                <div class="hstat">
+                    <span class="hstat-val success" id="statResolved">–</span>
+                    <span class="hstat-lbl">Resolved</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ MAIN CONTENT ══════════════ -->
+    <main class="main-wrap">
+
+        <!-- Toolbar: title + filters -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <h2 class="page-title"><i class="fa-solid fa-list-check"></i> My Submissions</h2>
+                <p class="page-subtitle">All complaints you've submitted — track status in real time</p>
+            </div>
+            <div class="toolbar-right">
+                <div class="filter-group" id="filterGroup">
+                    <button class="filter-btn active" data-filter="all" onclick="filterCards('all', this)">All</button>
+                    <button class="filter-btn" data-filter="Pending" onclick="filterCards('Pending', this)">
+                        <span class="dot pending"></span> Pending
+                    </button>
+                    <button class="filter-btn" data-filter="In Progress" onclick="filterCards('In Progress', this)">
+                        <span class="dot progress"></span> In Progress
+                    </button>
+                    <button class="filter-btn" data-filter="Resolved" onclick="filterCards('Resolved', this)">
+                        <span class="dot resolved"></span> Resolved
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid" id="complaintsContainer">
+            <div class="state-box loading-state">
+                <div class="spinner"></div>
+                <p>Loading your submissions...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="my.complaint.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

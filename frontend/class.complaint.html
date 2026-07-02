@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Complaints – SmartCollege</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="my.complaint.css">
+    <style>
+        /* Override old body inline style */
+        body { margin: 0; background: var(--bg); }
+
+        /* ── CLASS PAGE SPECIFIC ── */
+        .class-hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 48px 40px 56px;
+            color: white;
+        }
+
+        .class-hero::before {
+            content: '';
+            position: absolute;
+            width: 320px; height: 320px;
+            border-radius: 50%;
+            background: rgba(99,102,241,0.1);
+            right: -80px; top: -100px;
+            pointer-events: none;
+        }
+
+        .class-hero-content {
+            max-width: 1160px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+        }
+
+        .class-hero-icon {
+            width: 64px; height: 64px;
+            border-radius: 16px;
+            background: rgba(99,102,241,0.18);
+            border: 1px solid rgba(99,102,241,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #a5b4fc;
+            flex-shrink: 0;
+        }
+
+        .class-hero-text { flex: 1; min-width: 200px; }
+        .class-hero-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            margin-bottom: 6px;
+        }
+
+        .class-hero-text p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .branch-badge {
+            background: rgba(99,102,241,0.18);
+            border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Page inner container */
+        .class-main {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 36px 24px 64px;
+        }
+
+        .class-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .class-toolbar h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .class-toolbar h2 i { color: #4f46e5; }
+
+        .class-toolbar p {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+        /* Upvote button override for new card style */
+        .upvote-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .upvote-btn.active {
+            background: #ecfdf5;
+            color: #059669;
+            cursor: default;
+        }
+
+        .upvote-btn.inactive {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .upvote-btn.inactive:hover {
+            background: #2563eb;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .upvote-btn:disabled {
+            opacity: 0.7;
+        }
+
+        /* Submitter tag */
+        .submitter-tag {
+            font-size: 11px;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══ NAVBAR ══ -->
+    <header class="navbar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>SmartCollege Portal</span>
+        </div>
+
+        <div class="breadcrumb-nav" style="display:flex;align-items:center;gap:6px;font-size:13px;color:#64748b;">
+            <a href="#" onclick="goBack()" style="color:#4f46e5;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:5px;">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <span style="color:#94a3b8;">/</span>
+            <span style="color:#0f172a;font-weight:600;">Class Issues</span>
+        </div>
+
+        <div class="nav-right">
+            <span class="nav-username" id="navUsername">Loading...</span>
+            <button class="btn-back" onclick="goBack()">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </button>
+            <button class="btn-back" onclick="logout()" style="background:#fee2e2;color:#ef4444;border-color:transparent;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- ══ HERO ══ -->
+    <section class="class-hero">
+        <div class="class-hero-content">
+            <div class="class-hero-icon">
+                <i class="fa-solid fa-people-group"></i>
+            </div>
+            <div class="class-hero-text">
+                <h1>Class Issues – <span id="branchDisplay">Loading...</span></h1>
+                <p>Browse open complaints from your class. Upvote the ones affecting you to boost priority!</p>
+            </div>
+            <div>
+                <span class="branch-badge" id="userRoleDisplay">Student</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ MAIN CONTENT ══ -->
+    <main class="class-main">
+        <div class="class-toolbar">
+            <div>
+                <h2><i class="fa-solid fa-fire-flame-curved"></i> Active Complaints</h2>
+                <p>Tap "Upvote" to boost an issue's visibility with the admin team</p>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="classComplaintsContainer">
+            <div class="state-box loading-state">
+                <div class="spinner"></div>
+                <p>Loading class complaints...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="class.complaint.js"></script>
+</body>
+</html>

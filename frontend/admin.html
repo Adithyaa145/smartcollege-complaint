@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SmartCollege</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 9998;"></div>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <div class="brand-text">
+                    <h2>SmartCollege</h2>
+                    <span>Complaint Hub</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <span class="group-title">Navigation</span>
+                    <a href="#" class="nav-item active" id="nav-dashboard">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item" id="nav-analytics">
+                        <i class="fa-solid fa-square-poll-vertical"></i>
+                        <span>Analytics & Reports</span>
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <span class="group-title">Sections</span>
+                    <button class="nav-filter-btn type-section-btn active" onclick="setTypeSection('all')" id="ts-all">
+                        <i class="fa-solid fa-border-all"></i>
+                        <span>All Sections</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('classroom')" id="ts-classroom">
+                        <i class="fa-solid fa-school"></i>
+                        <span>Classroom</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('hostel')" id="ts-hostel">
+                        <i class="fa-solid fa-hotel"></i>
+                        <span>Hostel</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('labs')" id="ts-labs">
+                        <i class="fa-solid fa-flask"></i>
+                        <span>Labs</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('transport')" id="ts-transport">
+                        <i class="fa-solid fa-bus"></i>
+                        <span>Transport</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('fees')" id="ts-fees">
+                        <i class="fa-solid fa-credit-card"></i>
+                        <span>Fees</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('projector')" id="ts-projector">
+                        <i class="fa-solid fa-video"></i>
+                        <span>Projector</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('internet')" id="ts-internet">
+                        <i class="fa-solid fa-wifi"></i>
+                        <span>Internet</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('electrical')" id="ts-electrical">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Electrical</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('maintenance')" id="ts-maintenance">
+                        <i class="fa-solid fa-wrench"></i>
+                        <span>Maintenance</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('feedback')" id="ts-feedback">
+                        <i class="fa-solid fa-comments"></i>
+                        <span>Feedback</span>
+                    </button>
+                    <button class="nav-filter-btn type-section-btn" onclick="setTypeSection('general')" id="ts-general">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>General / Others</span>
+                    </button>
+                </div>
+                
+                <div class="nav-group">
+                    <span class="group-title">Quick Filters</span>
+                    <button class="nav-filter-btn" onclick="setQuickFilter('all')" id="qf-all">
+                        <i class="fa-solid fa-list"></i>
+                        <span>All Complaints</span>
+                    </button>
+                    <button class="nav-filter-btn" onclick="setQuickFilter('pending')" id="qf-pending">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Pending</span>
+                    </button>
+                    <button class="nav-filter-btn" onclick="setQuickFilter('in-progress')" id="qf-in-progress">
+                        <i class="fa-solid fa-spinner"></i>
+                        <span>In Progress</span>
+                    </button>
+                    <button class="nav-filter-btn" onclick="setQuickFilter('resolved')" id="qf-resolved">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Resolved</span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff&bold=true" alt="Admin Avatar">
+                    <div class="user-details">
+                        <span class="user-name">Super Admin</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+                <button class="btn-logout-sidebar" onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Log Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <button class="mobile-hamburger" id="mobileHamburgerBtn" style="display: none; background: none; border: none; font-size: 20px; color: var(--text-main); cursor: pointer; margin-right: 12px;">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="welcome-message">
+                    <h1>Overview</h1>
+                    <p>Track, manage, and resolve campus-wide complaints</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" placeholder="Search complaints..." onkeyup="handleSearch()">
+                    </div>
+                    <div class="notification-badge" onclick="showNotificationsFeed()" style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); transition: all 0.2s;" onmouseover="this.style.background='var(--border)';" onmouseout="this.style.background='var(--bg-card)';">
+                        <i class="fa-solid fa-bell" style="color: var(--text-muted); font-size: 15px;"></i>
+                        <span id="notif-badge" style="display: none; position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background-color: var(--danger); border: 1.5px solid white;"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Grid -->
+            <div class="dashboard-scrollable-area" id="workspace-dashboard">
+                <!-- Stats Summary Cards -->
+                <section class="stats-grid">
+                    <div class="stats-card total-card" onclick="setQuickFilter('all')">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">Total Submissions</span>
+                            <span class="card-value" id="total">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card pending-card" onclick="setQuickFilter('pending')">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">Pending</span>
+                            <span class="card-value" id="pending">0</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-card progress-card" onclick="setQuickFilter('in-progress')">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-spinner"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">In Progress</span>
+                            <span class="card-value" id="progress">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card resolved-card" onclick="setQuickFilter('resolved')">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">Resolved</span>
+                            <span class="card-value" id="resolved">0</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Complaints Interface (Grid of List + Details) -->
+                <div class="interface-grid">
+                    <!-- Left Column: Filter Controls and Complaints List -->
+                    <section class="complaints-list-column">
+                        <div class="list-controls-card">
+                            <div class="control-group">
+                                <label><i class="fa-solid fa-users-gear"></i> Submitter Role</label>
+                                <div class="filter-buttons-container">
+                                    <button class="filter-pill active" onclick="setRoleFilter('all')" id="btn-all">All</button>
+                                    <button class="filter-pill" onclick="setRoleFilter('student')" id="btn-student">Students</button>
+                                    <button class="filter-pill" onclick="setRoleFilter('faculty')" id="btn-faculty">Faculty</button>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label><i class="fa-solid fa-filter"></i> Status</label>
+                                <div class="filter-buttons-container">
+                                    <button class="filter-pill active" onclick="setStatusFilter('all')" id="btn-status-all">All Statuses</button>
+                                    <button class="filter-pill" onclick="setStatusFilter('Pending')" id="btn-status-pending">Pending</button>
+                                    <button class="filter-pill" onclick="setStatusFilter('In Progress')" id="btn-status-inprogress">In Progress</button>
+                                    <button class="filter-pill" onclick="setStatusFilter('Resolved')" id="btn-status-resolved">Resolved</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="list-container">
+                            <div class="list-header">
+                                <h3 id="list-title-text">All Complaints</h3>
+                                <span class="list-count-badge" id="list-count">0</span>
+                            </div>
+                            <div id="complaintList" class="complaints-list-scrollable"></div>
+                        </div>
+                    </section>
+
+                    <!-- Right Column: Detail Panel -->
+                    <section class="complaint-detail-column" id="details">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-inbox"></i>
+                            <h3>No Complaint Selected</h3>
+                            <p>Choose a complaint from the list to view its details, student history, and update resolution status.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Analytics Workspace (Hidden by Default) -->
+            <div class="dashboard-scrollable-area" id="workspace-analytics" style="display: none; padding: 24px;">
+                <!-- Header Actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <div>
+                        <h2 style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: var(--text-main); margin: 0;">System Performance &amp; Metrics</h2>
+                        <p style="font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--text-muted); margin: 4px 0 0 0;">Review department benchmarks, resolution velocity, and monthly trends</p>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn-primary" onclick="exportCSVReport()" style="background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s;">
+                            <i class="fa-solid fa-file-csv"></i> Export CSV
+                        </button>
+                        <button class="btn-primary" onclick="printPDFReport()" style="background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s;">
+                            <i class="fa-solid fa-file-pdf"></i> Export PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats summary grid -->
+                <section class="stats-grid" style="margin-bottom: 24px;">
+                    <div class="stats-card total-card">
+                        <div class="card-icon" style="background: rgba(79, 70, 229, 0.1); color: #4f46e5;">
+                            <i class="fa-solid fa-business-time"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">Avg Resolution Time</span>
+                            <span class="card-value" id="stat-avg-time">0.0 hrs</span>
+                        </div>
+                    </div>
+                    <div class="stats-card resolved-card">
+                        <div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">Resolved</span>
+                            <span class="card-value" id="stat-total-resolved">0</span>
+                        </div>
+                    </div>
+                    <div class="stats-card progress-card">
+                        <div class="card-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                            <i class="fa-solid fa-percent"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">Resolution Rate</span>
+                            <span class="card-value" id="stat-resolution-rate">0%</span>
+                        </div>
+                    </div>
+                    <div class="stats-card pending-card">
+                        <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">High Priority Active</span>
+                            <span class="card-value" id="stat-high-active">0</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charts Layout Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                    <!-- Line Chart Card -->
+                    <div class="list-controls-card" style="padding: 20px; border-radius: 12px; background: white; border: 1px solid var(--border);">
+                        <h4 style="margin: 0 0 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-main);">Monthly Complaint Submission Trend</h4>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="monthlyTrendChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Doughnut Card -->
+                    <div class="list-controls-card" style="padding: 20px; border-radius: 12px; background: white; border: 1px solid var(--border);">
+                        <h4 style="margin: 0 0 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-main);">Department-wise Complaints</h4>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="departmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                    <!-- Bar Chart Card -->
+                    <div class="list-controls-card" style="padding: 20px; border-radius: 12px; background: white; border: 1px solid var(--border);">
+                        <h4 style="margin: 0 0 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-main);">Category Distribution</h4>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Faculty Performance rankings table -->
+                    <div class="list-controls-card" style="padding: 20px; border-radius: 12px; background: white; border: 1px solid var(--border); display: flex; flex-direction: column;">
+                        <h4 style="margin: 0 0 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-main);">Faculty &amp; Resolver Performance Leaderboard</h4>
+                        <div style="flex: 1; overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: 'Outfit', sans-serif; font-size: 13.5px; text-align: left;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted); font-weight: 600; font-size: 13px;">
+                                        <th style="padding: 8px 12px;">Branch/Faculty</th>
+                                        <th style="padding: 8px 12px; text-align: center;">Total</th>
+                                        <th style="padding: 8px 12px; text-align: center;">Resolved</th>
+                                        <th style="padding: 8px 12px; text-align: center;">Avg Time</th>
+                                        <th style="padding: 8px 12px; text-align: right;">Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="facultyLeaderboardBody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -51,7 +51,7 @@ app.use(express.urlencoded({ extended: true }));
 // ==========================
 // 🔥 MONGODB CONNECTION
 // ==========================
-const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/complaintDB";
+const mongoURI = process.env.MONGO_URI || "mongodb+srv://adithya00dhs_db_user:Adithya%40123@cluster0.ifcpio7.mongodb.net/complaintDB?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => console.log("❌ DB Error:", err));

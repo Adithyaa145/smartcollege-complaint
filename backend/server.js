@@ -51,9 +51,10 @@ app.use(express.urlencoded({ extended: true }));
 // ==========================
 // 🔥 MONGODB CONNECTION
 // ==========================
-mongoose.connect("mongodb://127.0.0.1:27017/complaintDB")
-.then(() => console.log("✅ MongoDB Connected"))
-.catch(err => console.log("❌ DB Error:", err));
+const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/complaintDB";
+mongoose.connect(mongoURI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.log("❌ DB Error:", err));
 
 // ==========================
 // 📦 SCHEMA
@@ -1093,6 +1094,7 @@ app.post("/chat", verifyToken, async (req, res) => {
 // ==========================
 // 🚀 START SERVER
 // ==========================
-app.listen(3000, () => {
-  console.log("🚀 Server running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

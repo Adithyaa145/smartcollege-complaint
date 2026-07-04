@@ -94,6 +94,7 @@ const Complaint = mongoose.model("Complaint", complaintSchema);
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  enrollment: { type: String, unique: true, sparse: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["student", "admin", "faculty"], default: "student" },
   branch: { type: String, default: "CSE" }
@@ -246,17 +247,9 @@ app.post("/submit-complaint", verifyToken, upload.single("image"), async (req, r
     console.log("BODY:", req.body);   // 🔥 debug
     console.log("FILE:", req.file);   // 🔥 debug
 
-    const exists = await Complaint.findOne({
-      room: req.body.room,
-      type: req.body.issue,   // ✅ FIXED
-      description: req.body.description
-    });
-
-    if (exists) {
-      return res.json({ message: "Duplicate complaint already exists ⚠️" });
-    }
-
     const aiResult = classifyComplaintAI(req.body.description, req.body.issue);
+
+
     const isAnonymous = req.body.anonymous === "true" || req.body.anonymous === true;
 
     const newComplaint = new Complaint({
@@ -361,21 +354,29 @@ app.post("/send-otp", async (req, res) => {
 
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role, branch, otp } = req.body;
+    const { name, email, password, role, branch, enrollment } = req.body;
 
     // Check required fields
-    if (!name || !email || !password || !otp) {
-      return res.status(400).json({ error: "All fields including OTP code are required ⚠️" });
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "All fields are required ⚠️" });
     }
 
-    // Verify OTP
-    const record = await OTP.findOne({ email, otp });
-    if (!record) {
-      return res.status(400).json({ error: "Invalid or expired verification code ❌" });
-    }
+    // Validate enrollment number for students (exactly 13 digits)
+    const isStudent = !role || role === "student";
+    if (isStudent) {
+      if (!enrollment) {
+        return res.status(400).json({ error: "Enrollment number is required for students ⚠️" });
+      }
+      if (!/^\d{13}$/.test(enrollment)) {
+        return res.status(400).json({ error: "Enrollment number must be exactly 13 digits ⚠️" });
+      }
 
-    // Delete OTP record once verified
-    await OTP.deleteOne({ email });
+      // Check duplicate enrollment
+      const existingEnrollment = await User.findOne({ enrollment });
+      if (existingEnrollment) {
+        return res.status(400).json({ error: "Enrollment number already registered ⚠️" });
+      }
+    }
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -391,6 +392,7 @@ app.post("/register", async (req, res) => {
     const newUser = new User({
       name,
       email,
+      enrollment: isStudent ? enrollment : undefined,
       password: hashedPassword,
       role: role || "student",
       branch: branch || "CSE"
@@ -407,12 +409,17 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { identifier, password, role } = req.body;
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user by either email or enrollment number
+    const user = await User.findOne({
+      $or: [
+        { email: identifier },
+        { enrollment: identifier }
+      ]
+    });
     if (!user) {
-      return res.status(400).json({ error: "Invalid email or password ❌" });
+      return res.status(400).json({ error: "Invalid credentials ❌" });
     }
 
     // Validate password
@@ -673,14 +680,19 @@ app.put("/update/:id", verifyToken, verifyAdmin, async (req, res) => {
 // ==========================
 // ✅ DELETE COMPLAINT
 // ==========================
-app.delete("/delete/:id", verifyToken, verifyAdmin, async (req, res) => {
+app.delete("/delete/:id", verifyToken, async (req, res) => {
   try {
-    const deleted = await Complaint.findByIdAndDelete(req.params.id);
-
-    if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+    const complaint = await Complaint.findById(req.params.id);
+    if (!complaint) {
+      return res.status(404).json({ error: "Complaint not found" });
     }
 
+    // Only allow deletion if user is admin OR if the user is the student who filed it
+    if (req.user.role !== "admin" && complaint.email !== req.user.email) {
+      return res.status(403).json({ error: "Unauthorized: You can only delete your own complaints" });
+    }
+
+    await Complaint.findByIdAndDelete(req.params.id);
     res.json({ message: "Deleted successfully" });
 
   } catch (err) {
@@ -785,13 +797,13 @@ app.post("/extract-text", verifyToken, upload.single("image"), async (req, res) 
     if (!extractedText) {
       const filename = req.file.originalname.toLowerCase();
       if (filename.includes("wifi") || filename.includes("internet") || filename.includes("offline")) {
-        extractedText = "ALERT: ROUTER OFFLINE - SERVICE NOT AVAILABLE";
+        extractedText = "ROUTER OFFLINE - NETWORK SERVICE DOWN";
       } else if (filename.includes("socket") || filename.includes("electrical") || filename.includes("broken")) {
-        extractedText = "CAUTION: OUT OF ORDER. DO NOT USE.";
+        extractedText = "OUT OF ORDER - ELECTRICAL SOCKET FAULTY";
       } else if (filename.includes("leak") || filename.includes("water") || filename.includes("pipe")) {
-        extractedText = "PLUMBING FAULT: LEAK IN MAIN INLET";
+        extractedText = "PLUMBING ISSUE: LEAK IN WATER PIPE";
       } else {
-        extractedText = "CAMPUS EQUIPMENT FAULT DETECTED";
+        extractedText = "CAMPUS EQUIPMENT ISSUE DETECTED";
       }
       console.log("OCR Fallback text matched:", extractedText);
     }

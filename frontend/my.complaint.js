@@ -343,6 +343,13 @@ async function openComplaintDetailsModal(c) {
                         </button>
                     </div>
                 </div>
+
+                <!-- Delete Action -->
+                <div style="margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px; display: flex; justify-content: flex-end;">
+                    <button type="button" onclick="deleteStudentComplaint('${comp._id}')" style="background-color: #ef4444; color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-trash-can"></i> Delete Complaint
+                    </button>
+                </div>
             </div>
         `;
     };
@@ -410,6 +417,45 @@ async function openComplaintDetailsModal(c) {
         } catch (err) {
             console.error("Comment Error:", err);
             Swal.fire({ title: 'Error', text: 'Failed to send comment ❌', icon: 'error', confirmButtonColor: '#4f46e5' });
+        }
+    };
+
+    window.deleteStudentComplaint = async (id) => {
+        const confirmResult = await Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to permanently delete this complaint?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        try {
+            const res = await fetch(`http://localhost:3000/delete/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            if (res.ok) {
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Your complaint has been deleted successfully.',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                const data = await res.json();
+                Swal.fire('Error', data.error || 'Failed to delete complaint', 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            Swal.fire('Error', 'Failed to delete complaint ❌', 'error');
         }
     };
 }

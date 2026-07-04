@@ -242,17 +242,33 @@ body {
 </style>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const roleSelect = document.getElementById("role");
+    const label = document.getElementById("identifierLabel");
+    const input = document.getElementById("identifier");
+
+    roleSelect.addEventListener("change", () => {
+        if (roleSelect.value === "student") {
+            label.innerText = "Email or Enrollment Number";
+            input.placeholder = "Enter email or enrollment number";
+        } else {
+            label.innerText = "Email Address";
+            input.placeholder = "Enter your email";
+        }
+    });
+});
+
 async function handleLogin(event) {
     event.preventDefault();
 
     const role = document.getElementById("role").value;
-    const email = document.getElementById("email").value;
+    const identifier = document.getElementById("identifier").value.trim();
     const password = document.getElementById("password").value;
 
-    if (!email || !password) {
+    if (!identifier || !password) {
         Swal.fire({
             title: 'Fields Required',
-            text: 'Please fill in both email and password.',
+            text: 'Please fill in both your email/enrollment and password.',
             icon: 'warning',
             confirmButtonColor: '#4f46e5'
         });
@@ -263,7 +279,7 @@ async function handleLogin(event) {
         const response = await fetch("http://localhost:3000/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, role })
+            body: JSON.stringify({ identifier, password, role })
         });
 
         const data = await response.json();
@@ -451,10 +467,10 @@ async function handleForgotPassword(event) {
             </div>
 
             <div class="form-group">
-                <label for="email">Email Address</label>
+                <label for="identifier" id="identifierLabel">Email or Enrollment Number</label>
                 <div class="input-wrapper">
-                    <i class="fa-regular fa-envelope"></i>
-                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <i class="fa-regular fa-envelope" id="identifierIcon"></i>
+                    <input type="text" id="identifier" placeholder="Enter email or enrollment number" required>
                 </div>
             </div>
 

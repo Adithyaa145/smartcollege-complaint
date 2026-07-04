@@ -18,6 +18,11 @@
                 <span>SmartCollege Portal</span>
             </div>
             <div class="nav-user">
+                <!-- Notifications Bell -->
+                <div class="notifications-bell-wrapper" onclick="showNotificationsFeed()" style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; transition: all 0.2s; margin-right: 5px;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
+                    <i class="fa-solid fa-bell" style="color: #64748b; font-size: 16px;"></i>
+                    <span id="notif-badge" style="display: none; position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #ef4444; border: 2px solid white;"></span>
+                </div>
                 <span id="navUserName">Loading...</span>
                 <a href="my.complaint.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;background:#fffbeb;color:#d97706;font-size:13px;font-weight:600;text-decoration:none;border:1px solid #fde68a;transition:all 0.2s;" onmouseover="this.style.background='#f59e0b';this.style.color='white';" onmouseout="this.style.background='#fffbeb';this.style.color='#d97706';">
                     <i class="fa-solid fa-list-check"></i> My Submissions
@@ -216,6 +221,99 @@
     function logout() {
         localStorage.clear();
         window.location.href = "login.html";
+    }
+
+    // ==========================================================
+    // 🔔 NOTIFICATIONS FEED FOR FACULTY
+    // ==========================================================
+    let activeNotifications = [];
+
+    async function checkNotifications() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+            const res = await fetch("http://localhost:3000/notifications", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                activeNotifications = data;
+                const badge = document.getElementById("notif-badge");
+                if (badge) {
+                    if (data.length > 0) {
+                        badge.style.display = "block";
+                    } else {
+                        badge.style.display = "none";
+                    }
+                }
+            }
+        } catch(err) {
+            console.error("Notifications poll error:", err);
+        }
+    }
+
+    // Check every 10 seconds
+    setInterval(checkNotifications, 10000);
+    // Initial check
+    checkNotifications();
+
+    async function showNotificationsFeed() {
+        const token = localStorage.getItem("token");
+        if (activeNotifications.length === 0) {
+            Swal.fire({
+                title: 'Notifications',
+                text: 'You have no unread notifications.',
+                icon: 'info',
+                confirmButtonColor: '#4f46e5'
+            });
+            return;
+        }
+
+        let notifListHtml = "";
+        activeNotifications.forEach(n => {
+            const dateStr = new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            notifListHtml += `
+                <div style="text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #0f172a;">
+                    <div style="font-weight: 500;">${n.text}</div>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;">${dateStr}</div>
+                </div>
+            `;
+        });
+
+        await Swal.fire({
+            title: 'Unread Notifications 🔔',
+            html: `
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px;">
+                    ${notifListHtml}
+                </div>
+            `,
+            confirmButtonColor: '#4f46e5',
+            confirmButtonText: 'Mark all as read',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            cancelButtonColor: '#64748b'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const markRes = await fetch("http://localhost:3000/notifications/read-all", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        }
+                    });
+                    if (markRes.ok) {
+                        activeNotifications = [];
+                        const badge = document.getElementById("notif-badge");
+                        if (badge) badge.style.display = "none";
+                        Swal.fire({ title: 'Read!', text: 'All notifications cleared.', icon: 'success', timer: 1200, showConfirmButton: false });
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        });
     }
     </script>
 </body>

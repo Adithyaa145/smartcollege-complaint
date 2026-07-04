@@ -461,6 +461,14 @@ function showDetails(c) {
                         <span class="field-value upvotes-highlight"><i class="fa-solid fa-circle-arrow-up"></i> ${c.upvotes} Upvotes</span>
                     </div>
                     ` : ''}
+                    ${c.votedBy && c.votedBy.length > 0 ? `
+                    <div class="detail-field">
+                        <span class="field-label">Upvoted By</span>
+                        <span class="field-value" style="font-size: 13.5px; color: #4b5563; word-break: break-all;">
+                            <i class="fa-solid fa-users" style="color: #64748b; margin-right: 4px;"></i> ${c.votedBy.join(", ")}
+                        </span>
+                    </div>
+                    ` : ''}
                 </div>
             </div>
 

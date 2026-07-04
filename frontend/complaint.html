@@ -389,15 +389,12 @@ input[type="file"]:hover {
             <div class="field-wrap">
                 <label>Attach Image (optional)</label>
                 <input type="file" id="image" accept="image/*">
-                <span id="ocrStatus" style="display: none; font-size: 12px; font-weight: 600; color: #4f46e5; margin-top: 4px;"><i class="fa-solid fa-spinner fa-spin"></i> AI scanning image for text extraction...</span>
+                <div id="imagePreviewContainer" style="display: none; margin-top: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; max-height: 150px; background: #f8fafc; padding: 5px; justify-content: center; align-items: center;">
+                    <img id="imagePreview" style="max-height: 140px; max-width: 100%; object-fit: contain; border-radius: 6px;">
+                </div>
             </div>
 
-            <div class="field-wrap" style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
-                <input type="checkbox" id="anonymous" style="width: 16px; height: 16px; cursor: pointer;">
-                <label for="anonymous" style="margin: 0; font-weight: 500; font-size: 13.5px; cursor: pointer; color: #334155;">Submit this complaint anonymously</label>
-            </div>
 
-            <div id="similarityWarningBlock" style="display: none; margin-bottom: 16px;"></div>
 
             <button type="submit" class="submit-btn">
                 <i class="fa-solid fa-paper-plane"></i> Submit Complaint
@@ -433,7 +430,7 @@ input[type="file"]:hover {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="complaint.js"></script>
+<script src="complaint.js?v=1.2"></script>
 <script src="chatbot.js"></script>
 </body>
 </html>

@@ -331,8 +331,6 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
         Submitting...
     `;
 
-    const isAnon = document.getElementById("anonymous") ? document.getElementById("anonymous").checked : false;
-
     // Build form payload
     const formData = new FormData();
     formData.append("student_name", user.name);
@@ -344,7 +342,6 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     formData.append("issue",        issueVal);
     formData.append("description",  descVal);
     formData.append("ocrText",      lastOcrText || "");
-    formData.append("anonymous",    isAnon);
 
     const fileInput = document.getElementById("image");
     if (fileInput.files.length > 0) {
@@ -363,17 +360,28 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
         submitBtn.innerHTML = originalHTML;
 
         if (!res.ok) {
+            // Try to extract error details from response body
+            let errorMsg = `Server returned ${res.status}`;
+            try {
+                const errData = await res.json();
+                if (errData && errData.error) {
+                    errorMsg = errData.error;
+                }
+            } catch (e) {
+                // ignore parsing errors
+            }
             if (res.status === 401 || res.status === 403) {
                 Swal.fire({ title: 'Session Expired', text: 'Please log in again.', icon: 'warning', confirmButtonColor: '#4f46e5' })
                     .then(() => { localStorage.clear(); window.location.href = "login.html"; });
                 return;
             }
-            throw new Error("Server returned " + res.status);
+            Swal.fire({ title: 'Submission Error', text: errorMsg, icon: 'error', confirmButtonColor: '#4f46e5' });
+            return;
         }
 
         const result = await res.json();
 
-        // ── SUCCESS ── fire even if message wording varies
+        // ── SUCCESS ── show success modal for 3 seconds, then redirect
         Swal.fire({
             icon: 'success',
             title: '<span style="font-size:22px;font-weight:800;color:#0f172a;">Complaint Submitted!</span>',
@@ -395,28 +403,24 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
                         Your complaint has been <strong>received</strong> and is now pending review.
                     </p>
                     <p style="margin:0;font-size:13px;color:#6b7280;font-family:'Outfit',sans-serif;">
-                        You can track its status in <strong>My Submissions</strong> anytime.
+                        Redirecting to submissions in 3 seconds...
                     </p>
                 </div>
             `,
-            showCancelButton: true,
-            confirmButtonText: '<i class="fa-solid fa-list-check"></i> &nbsp;View My Submissions',
-            cancelButtonText: 'Submit Another',
-            confirmButtonColor: '#4f46e5',
-            cancelButtonColor: '#6b7280',
-            reverseButtons: true,
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
             customClass: {
-                popup: 'swal-custom-popup',
-                confirmButton: 'swal-custom-confirm',
-                cancelButton: 'swal-custom-cancel'
+                popup: 'swal-custom-popup'
             },
             showClass: { popup: 'animate__animated animate__zoomIn' }
-        }).then((swalResult) => {
+        }).then(() => {
             document.getElementById("complaintForm").reset();
-            if (swalResult.isConfirmed) {
-                window.location.href = "my.complaint.html";
-            }
-            // If "Submit Another" — just reset and stay on page
+            const previewContainer = document.getElementById("imagePreviewContainer");
+            if (previewContainer) previewContainer.style.display = "none";
+            window.location.href = "my.complaint.html";
         });
 
     } catch (err) {
@@ -434,142 +438,29 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
 });
 
 // ==========================================================
-// 🤖 AI OCR & PROACTIVE DUPLICATE SUGGESTIONS
+// 📷 IMAGE PREVIEW HANDLER (AI OCR REMOVED)
 // ==========================================================
-let similarityTimeout = null;
 let lastOcrText = "";
-
-const roomInput = document.getElementById("room");
 const descInput = document.getElementById("description");
-
-function checkComplaintSimilarity() {
-    const room = roomInput.value.trim();
-    const description = descInput.value.trim();
-    const warningBlock = document.getElementById("similarityWarningBlock");
-
-    if (!room || description.length < 5) {
-        warningBlock.style.display = "none";
-        return;
-    }
-
-    if (similarityTimeout) clearTimeout(similarityTimeout);
-
-    similarityTimeout = setTimeout(async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`http://localhost:3000/check-similarity?room=${encodeURIComponent(room)}&description=${encodeURIComponent(description)}`, {
-                headers: { "Authorization": "Bearer " + token }
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                if (data.similar) {
-                    warningBlock.innerHTML = `
-                        <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #d97706; padding: 12px 16px; border-radius: 8px; font-family: 'Outfit', sans-serif;">
-                            <div style="display: flex; gap: 8px; align-items: flex-start;">
-                                <i class="fa-solid fa-triangle-exclamation" style="color: #d97706; margin-top: 2px;"></i>
-                                <div style="flex: 1; text-align: left;">
-                                    <h5 style="margin: 0 0 4px; font-size: 13px; font-weight: 700; color: #92400e;">A similar active complaint exists:</h5>
-                                    <p style="margin: 0 0 8px; font-size: 12.5px; color: #b45309; line-height: 1.4;">
-                                        "${data.similar.description.substring(0, 110)}..."
-                                    </p>
-                                    <button type="button" onclick="upvoteExistingComplaint('${data.similar._id}')" style="background-color: #d97706; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                                        <i class="fa-solid fa-circle-arrow-up"></i> Upvote Existing Instead
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    warningBlock.style.display = "block";
-                } else {
-                    warningBlock.style.display = "none";
-                }
-            }
-        } catch (err) {
-            console.error("Similarity check error:", err);
-        }
-    }, 600);
-}
-
-if (roomInput && descInput) {
-    roomInput.addEventListener("input", checkComplaintSimilarity);
-    descInput.addEventListener("input", checkComplaintSimilarity);
-}
-
-window.upvoteExistingComplaint = async (id) => {
-    try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:3000/complaint/${id}/vote`, {
-            method: "POST",
-            headers: { "Authorization": "Bearer " + token }
-        });
-
-        if (res.ok) {
-            Swal.fire({
-                title: 'Vote Cast!',
-                text: 'You have successfully upvoted the existing complaint instead of filing a duplicate. Thank you!',
-                icon: 'success',
-                confirmButtonColor: '#4f46e5'
-            }).then(() => {
-                goDashboard();
-            });
-        } else {
-            const data = await res.json();
-            Swal.fire('Error', data.error || 'Failed to vote', 'error');
-        }
-    } catch (err) {
-        console.error(err);
-        Swal.fire('Error', 'Could not cast vote', 'error');
-    }
-};
 
 const imageInput = document.getElementById("image");
 if (imageInput) {
-    imageInput.addEventListener("change", async () => {
+    imageInput.addEventListener("change", () => {
         const files = imageInput.files;
         if (files.length === 0) return;
 
         const file = files[0];
-        const statusLabel = document.getElementById("ocrStatus");
-        if (statusLabel) statusLabel.style.display = "block";
-
-        const formData = new FormData();
-        formData.append("image", file);
-
-        try {
-            const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:3000/extract-text", {
-                method: "POST",
-                body: formData,
-                headers: { "Authorization": "Bearer " + token }
-            });
-
-            if (statusLabel) statusLabel.style.display = "none";
-
-            if (res.ok) {
-                const data = await res.json();
-                if (data.text) {
-                    lastOcrText = data.text;
-                    const currentText = descInput.value.trim();
-                    const textToAppend = `\n[OCR Detected: "${data.text}"]`;
-                    if (!currentText.includes(textToAppend)) {
-                        descInput.value = currentText ? currentText + textToAppend : textToAppend.substring(1);
-                        checkComplaintSimilarity();
-                    }
-                    Swal.fire({
-                        title: 'Text Extracted!',
-                        text: `AI extracted text: "${data.text}"`,
-                        icon: 'success',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
-                }
+        
+        // Show image preview thumbnail
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const previewContainer = document.getElementById("imagePreviewContainer");
+            const previewImage = document.getElementById("imagePreview");
+            if (previewContainer && previewImage) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = "flex";
             }
-        } catch (err) {
-            console.error("OCR upload error:", err);
-            if (statusLabel) statusLabel.style.display = "none";
-        }
+        };
+        reader.readAsDataURL(file);
     });
 }

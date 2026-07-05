@@ -6,13 +6,16 @@ const CHATBOT_API_BASE = (() => {
     const host = window.location.hostname;
     const port = window.location.port;
 
-    if (proto === 'file:') {
-        return 'https://smartcollege-complaint.onrender.com';
-    }
-    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3001') {
+    if (host === 'localhost' || host === '127.0.0.1') {
+        if (port === '3001') {
+            return '';
+        }
         return 'http://localhost:3001';
     }
-    return '';
+    if (host === 'smartcollege-complaint.onrender.com') {
+        return '';
+    }
+    return 'https://smartcollege-complaint.onrender.com';
 })();
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Inject components dynamically

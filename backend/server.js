@@ -17,7 +17,7 @@ try {
   console.log("tesseract.js not installed, operating in mock fallback mode for OCR");
 }
 
-const JWT_SECRET = "smartcollege_super_secret_key_123"; // Usually in .env
+const JWT_SECRET = process.env.JWT_SECRET || "smartcollege_super_secret_key_123"; // Loaded from .env
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

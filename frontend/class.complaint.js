@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <div class="state-icon locked"><i class="fa-solid fa-user-lock"></i></div>
                 <h3>Authentication Required</h3>
                 <p class="state-desc">You must be logged in to view class complaints.</p>
-                <a href="login.html" class="btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Login Now</a>
+                <a href="index.html" class="btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Login Now</a>
             </div>
         `;
         return;

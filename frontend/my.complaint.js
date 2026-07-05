@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <div class="state-icon locked"><i class="fa-solid fa-user-lock"></i></div>
                 <h3>Authentication Required</h3>
                 <p class="state-desc">You must be logged in to view your submissions.</p>
-                <a href="login.html" class="btn-primary">
+                <a href="index.html" class="btn-primary">
                     <i class="fa-solid fa-right-to-bracket"></i> Login Now
                 </a>
             </div>`;
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!res.ok) {
             if (res.status === 401) {
                 localStorage.clear();
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
                 return;
             }
             throw new Error('Server error');

@@ -1,5 +1,5 @@
 const token = localStorage.getItem("token");
-if (!token) window.location.href = "login.html";
+if (!token) window.location.href = "index.html";
 
 let allComplaints = [];
 let currentRoleFilter = 'all';
@@ -630,7 +630,7 @@ async function loadComplaints() {
                 confirmButtonColor: '#6366f1'
             }).then(() => {
                 localStorage.clear();
-                window.location.href = "login.html";
+                window.location.href = "index.html";
             });
             return;
         }
@@ -656,7 +656,7 @@ loadComplaints();
 // LOGOUT
 function logout() {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 }
 
 // POST COMMENT

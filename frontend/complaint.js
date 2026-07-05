@@ -270,9 +270,9 @@ if (!token || !userString) {
     // Use SweetAlert if loaded, else fallback
     if (typeof Swal !== 'undefined') {
         Swal.fire({ title: 'Not Logged In', text: 'Please log in to submit a complaint.', icon: 'warning', confirmButtonColor: '#4f46e5' })
-            .then(() => { window.location.href = "login.html"; });
+            .then(() => { window.location.href = "index.html"; });
     } else {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 }
 
@@ -372,7 +372,7 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
             }
             if (res.status === 401 || res.status === 403) {
                 Swal.fire({ title: 'Session Expired', text: 'Please log in again.', icon: 'warning', confirmButtonColor: '#4f46e5' })
-                    .then(() => { localStorage.clear(); window.location.href = "login.html"; });
+                    .then(() => { localStorage.clear(); window.location.href = "index.html"; });
                 return;
             }
             Swal.fire({ title: 'Submission Error', text: errorMsg, icon: 'error', confirmButtonColor: '#4f46e5' });

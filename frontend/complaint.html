@@ -407,7 +407,7 @@ input[type="file"]:hover {
     // Role-aware dashboard redirect
     function goDashboard() {
         const userStr = localStorage.getItem('user');
-        if (!userStr) { window.location.href = 'login.html'; return; }
+        if (!userStr) { window.location.href = 'index.html'; return; }
         const user = JSON.parse(userStr);
         if (user.role === 'faculty') window.location.href = 'faculty.html';
         else window.location.href = 'profile.html';
@@ -416,7 +416,7 @@ input[type="file"]:hover {
     // Role-aware logout
     function logout() {
         localStorage.clear();
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
 
     // Update breadcrumb with complaint type

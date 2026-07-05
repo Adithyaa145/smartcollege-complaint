@@ -1,3 +1,4 @@
+const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "index.html";
 
@@ -326,8 +327,8 @@ function showDetails(c) {
         imageHtml = `
             <div class="image-box">
                 <h4>Attachment</h4>
-                <div class="image-preview-wrapper" onclick="zoomImage('/uploads/${c.image}')">
-                    <img src="/uploads/${c.image}" alt="Attachment Preview"/>
+                <div class="image-preview-wrapper" onclick="zoomImage('${API_BASE}/uploads/${c.image}')">
+                    <img src="${API_BASE}/uploads/${c.image}" alt="Attachment Preview"/>
                     <div class="image-overlay">
                         <i class="fa-solid fa-expand"></i> Click to enlarge
                     </div>
@@ -543,7 +544,7 @@ async function updateStatus(id) {
     try {
         const status = document.getElementById("status").value;
 
-        const res = await fetch(`/update/${id}`, {
+        const res = await fetch(API_BASE + `/update/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -589,7 +590,7 @@ async function deleteComplaint(id) {
     if (!confirmResult.isConfirmed) return;
 
     try {
-        const res = await fetch(`/delete/${id}`, {
+        const res = await fetch(API_BASE + `/delete/${id}`, {
             method: "DELETE",
             headers: { "Authorization": "Bearer " + token }
         });
@@ -618,7 +619,7 @@ async function deleteComplaint(id) {
 // LOAD ALL COMPLAINTS
 async function loadComplaints() {
     try {
-        const res = await fetch("/complaints", {
+        const res = await fetch(API_BASE + "/complaints", {
             headers: { "Authorization": "Bearer " + token }
         });
         
@@ -666,7 +667,7 @@ async function postComment(complaintId) {
     if (!text) return;
 
     try {
-        const res = await fetch(`/complaint/${complaintId}/comment`, {
+        const res = await fetch(API_BASE + `/complaint/${complaintId}/comment`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -701,7 +702,7 @@ async function checkNotifications() {
     if (!token) return;
 
     try {
-        const res = await fetch("/notifications", {
+        const res = await fetch(API_BASE + "/notifications", {
             headers: { "Authorization": "Bearer " + token }
         });
         if (res.ok) {
@@ -763,7 +764,7 @@ async function showNotificationsFeed() {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const markRes = await fetch("/notifications/read-all", {
+                const markRes = await fetch(API_BASE + "/notifications/read-all", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -816,7 +817,7 @@ if (navDashboard && navAnalytics && workspaceDashboard && workspaceAnalytics) {
 
 async function loadAnalyticsData() {
     try {
-        const res = await fetch("/admin/analytics", {
+        const res = await fetch(API_BASE + "/admin/analytics", {
             headers: { "Authorization": "Bearer " + token }
         });
         if (!res.ok) throw new Error("Failed to fetch analytics");

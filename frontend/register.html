@@ -267,6 +267,7 @@ body {
 </style>
 
 <script>
+const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
 document.addEventListener("DOMContentLoaded", () => {
     const roleSelect = document.getElementById("role");
     const enrollmentGroup = document.getElementById("enrollmentGroup");
@@ -298,7 +299,7 @@ async function handleRegister(event) {
     const enrollment = document.getElementById("enrollment").value.trim();
 
     try {
-        const response = await fetch("/register", {
+        const response = await fetch(API_BASE + "/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, password, role, branch, enrollment })

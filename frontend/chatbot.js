@@ -1,6 +1,7 @@
 // ==========================================================
 // chatbot.js - SmartCollege Floating AI Helper Chatbot
 // ==========================================================
+const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Inject components dynamically
     const botHtml = `
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("/chat", {
+            const res = await fetch(API_BASE + "/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

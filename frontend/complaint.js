@@ -1,3 +1,4 @@
+const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
 // ==========================
 // 🔥 DYNAMIC TITLE + OPTIONS
 // ==========================
@@ -349,7 +350,7 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     }
 
     try {
-        const res = await fetch("/submit-complaint", {
+        const res = await fetch(API_BASE + "/submit-complaint", {
             method: "POST",
             body: formData,
             headers: { "Authorization": "Bearer " + token }

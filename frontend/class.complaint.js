@@ -1,3 +1,4 @@
+const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
 document.addEventListener("DOMContentLoaded", async function () {
     const token = localStorage.getItem("token");
     let user = localStorage.getItem("user");
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 
     try {
-        const res = await fetch(`/class-complaints`, {
+        const res = await fetch(API_BASE + `/class-complaints`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -118,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function upvoteComplaint(id) {
     const token = localStorage.getItem("token");
     try {
-        const res = await fetch(`/complaint/${id}/vote`, {
+        const res = await fetch(API_BASE + `/complaint/${id}/vote`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`

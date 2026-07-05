@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require("express");
+const compression = require("compression");
 console.log('🔑 SMTP_USER:', process.env.SMTP_USER);
 console.log('🔑 SMTP_PASS exists?', !!process.env.SMTP_PASS);
 const cors = require("cors");
@@ -44,6 +45,7 @@ async function sendNotificationEmail(toEmail, subject, textContent) {
 
 const app = express();
 
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -52,7 +54,12 @@ app.use(express.urlencoded({ extended: true }));
 // 🔥 MONGODB CONNECTION
 // ==========================
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://adithya00dhs_db_user:Adithya%40123@cluster0.ifcpio7.mongodb.net/complaintDB?retryWrites=true&w=majority&appName=Cluster0";
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI, {
+  maxPoolSize: 50,
+  minPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 30000
+})
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => console.log("❌ DB Error:", err));
 
@@ -142,8 +149,14 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-app.use("/uploads", express.static(uploadsDir));
-app.use("/", express.static(path.join(__dirname, "../frontend")));
+app.use("/uploads", express.static(uploadsDir, {
+  maxAge: "1d",
+  etag: true
+}));
+app.use("/", express.static(path.join(__dirname, "../frontend"), {
+  maxAge: "1d",
+  etag: true
+}));
 
 // ==========================
 // 📸 MULTER SETUP

@@ -18,19 +18,25 @@
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span>SmartCollege Portal</span>
             </div>
-            <div class="nav-user">
+            <div class="navbar-actions">
                 <!-- Notifications Bell -->
                 <div class="notifications-bell-wrapper" onclick="showNotificationsFeed()" style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; transition: all 0.2s; margin-right: 5px;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
                     <i class="fa-solid fa-bell" style="color: #64748b; font-size: 16px;"></i>
                     <span id="notif-badge" style="display: none; position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #ef4444; border: 2px solid white;"></span>
                 </div>
-                <span id="navUserName">Loading...</span>
-                <a href="my.complaint.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;background:#eff6ff;color:#4f46e5;font-size:13px;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;transition:all 0.2s;" onmouseover="this.style.background='#4f46e5';this.style.color='white';" onmouseout="this.style.background='#eff6ff';this.style.color='#4f46e5';">
-                    <i class="fa-solid fa-list-check"></i> My Submissions
-                </a>
-                <button onclick="logout()" class="btn-logout-nav">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                <!-- Mobile Hamburger Toggle Button -->
+                <button class="mobile-hamburger-btn" onclick="toggleMobileMenu()" aria-label="Toggle Navigation Menu">
+                    <i class="fa-solid fa-bars"></i>
                 </button>
+                <div class="nav-user" id="navUserMenu">
+                    <span id="navUserName">Loading...</span>
+                    <a href="my.complaint.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;background:#eff6ff;color:#4f46e5;font-size:13px;font-weight:600;text-decoration:none;border:1px solid #c7d2fe;transition:all 0.2s;" onmouseover="this.style.background='#4f46e5';this.style.color='white';" onmouseout="this.style.background='#eff6ff';this.style.color='#4f46e5';">
+                        <i class="fa-solid fa-list-check"></i> My Submissions
+                    </a>
+                    <button onclick="logout()" class="btn-logout-nav">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -326,6 +332,21 @@
             });
         }
     }
+
+    function toggleMobileMenu() {
+        const menu = document.getElementById("navUserMenu");
+        if (menu) {
+            menu.classList.toggle("open");
+        }
+    }
+
+    document.addEventListener("click", function(e) {
+        const menu = document.getElementById("navUserMenu");
+        const burger = document.querySelector(".mobile-hamburger-btn");
+        if (menu && menu.classList.contains("open") && !menu.contains(e.target) && !burger.contains(e.target)) {
+            menu.classList.remove("open");
+        }
+    });
 
     function logout() {
         localStorage.clear();

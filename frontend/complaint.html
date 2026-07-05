@@ -303,6 +303,11 @@ input[type="file"]:hover {
     .container { padding: 24px 20px; }
     .page-wrap { padding: 24px 12px 40px; }
 }
+
+@media (max-width: 480px) {
+    .btn-nav span { display: none !important; }
+    .btn-nav { padding: 8px 12px !important; }
+}
 </style>
 </head>
 
@@ -323,10 +328,10 @@ input[type="file"]:hover {
 
     <div class="nav-actions">
         <button class="btn-nav btn-back" onclick="goDashboard()">
-            <i class="fa-solid fa-arrow-left"></i> Dashboard
+            <i class="fa-solid fa-arrow-left"></i> <span>Dashboard</span>
         </button>
         <button class="btn-nav btn-logout" onclick="logout()">
-            <i class="fa-solid fa-right-from-bracket"></i> Logout
+            <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
         </button>
     </div>
 </nav>

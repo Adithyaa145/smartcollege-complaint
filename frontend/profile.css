@@ -102,6 +102,29 @@ body {
     color: var(--text-main);
 }
 
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.mobile-hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.mobile-hamburger-btn:hover {
+    background-color: var(--bg-main);
+}
+
 .btn-logout-nav {
     background-color: var(--danger-light);
     color: var(--danger);
@@ -487,6 +510,44 @@ body {
     .navbar {
         padding: 0 20px;
     }
+
+    .mobile-hamburger-btn {
+        display: block;
+    }
+
+    .nav-user {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 20px;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        box-shadow: var(--shadow-lg);
+        min-width: 240px;
+        z-index: 100;
+        animation: slideDownMenu 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .nav-user.open {
+        display: flex;
+    }
+
+    .nav-user span {
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+        margin-bottom: 4px;
+    }
+
+    .nav-user a, .btn-logout-nav {
+        width: 100%;
+        justify-content: center;
+    }
     
     .profile-banner {
         padding: 40px 20px;
@@ -521,4 +582,9 @@ body {
         padding: 32px 16px;
         gap: 36px;
     }
+}
+
+@keyframes slideDownMenu {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

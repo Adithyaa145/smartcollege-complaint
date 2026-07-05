@@ -767,3 +767,12 @@ body {
     .hstat { padding: 8px 16px; }
     .hstat-divider { display: none; }
 }
+
+@media (max-width: 600px) {
+    .nav-username { display: none !important; }
+}
+
+@media (max-width: 500px) {
+    .btn-back span { display: none !important; }
+    .btn-back { padding: 8px 12px !important; min-width: unset !important; }
+}

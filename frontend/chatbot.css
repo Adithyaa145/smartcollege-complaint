@@ -157,3 +157,17 @@
 .chatbot-send-btn:hover {
     background: #4338ca;
 }
+
+@media (max-width: 480px) {
+    .chatbot-drawer {
+        right: 12px;
+        left: 12px;
+        width: auto;
+        height: 70vh;
+        bottom: 80px;
+    }
+    .chatbot-launcher {
+        bottom: 16px;
+        right: 16px;
+    }
+}

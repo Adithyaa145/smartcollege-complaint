@@ -1186,6 +1186,10 @@ button {
 }
 
 @media (max-width: 768px) {
+    .mobile-hamburger {
+        display: block !important;
+    }
+
     .dashboard-wrapper {
         flex-direction: column;
     }

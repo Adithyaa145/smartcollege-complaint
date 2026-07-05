@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("https://smartcollege-complaint.onrender.com/chat", {
+            const res = await fetch("/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

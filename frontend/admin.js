@@ -326,8 +326,8 @@ function showDetails(c) {
         imageHtml = `
             <div class="image-box">
                 <h4>Attachment</h4>
-                <div class="image-preview-wrapper" onclick="zoomImage('https://smartcollege-complaint.onrender.com/uploads/${c.image}')">
-                    <img src="https://smartcollege-complaint.onrender.com/uploads/${c.image}" alt="Attachment Preview"/>
+                <div class="image-preview-wrapper" onclick="zoomImage('/uploads/${c.image}')">
+                    <img src="/uploads/${c.image}" alt="Attachment Preview"/>
                     <div class="image-overlay">
                         <i class="fa-solid fa-expand"></i> Click to enlarge
                     </div>
@@ -543,7 +543,7 @@ async function updateStatus(id) {
     try {
         const status = document.getElementById("status").value;
 
-        const res = await fetch(`https://smartcollege-complaint.onrender.com/update/${id}`, {
+        const res = await fetch(`/update/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -589,7 +589,7 @@ async function deleteComplaint(id) {
     if (!confirmResult.isConfirmed) return;
 
     try {
-        const res = await fetch(`https://smartcollege-complaint.onrender.com/delete/${id}`, {
+        const res = await fetch(`/delete/${id}`, {
             method: "DELETE",
             headers: { "Authorization": "Bearer " + token }
         });
@@ -618,7 +618,7 @@ async function deleteComplaint(id) {
 // LOAD ALL COMPLAINTS
 async function loadComplaints() {
     try {
-        const res = await fetch("https://smartcollege-complaint.onrender.com/complaints", {
+        const res = await fetch("/complaints", {
             headers: { "Authorization": "Bearer " + token }
         });
         
@@ -666,7 +666,7 @@ async function postComment(complaintId) {
     if (!text) return;
 
     try {
-        const res = await fetch(`https://smartcollege-complaint.onrender.com/complaint/${complaintId}/comment`, {
+        const res = await fetch(`/complaint/${complaintId}/comment`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -701,7 +701,7 @@ async function checkNotifications() {
     if (!token) return;
 
     try {
-        const res = await fetch("https://smartcollege-complaint.onrender.com/notifications", {
+        const res = await fetch("/notifications", {
             headers: { "Authorization": "Bearer " + token }
         });
         if (res.ok) {
@@ -763,7 +763,7 @@ async function showNotificationsFeed() {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const markRes = await fetch("https://smartcollege-complaint.onrender.com/notifications/read-all", {
+                const markRes = await fetch("/notifications/read-all", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -816,7 +816,7 @@ if (navDashboard && navAnalytics && workspaceDashboard && workspaceAnalytics) {
 
 async function loadAnalyticsData() {
     try {
-        const res = await fetch("https://smartcollege-complaint.onrender.com/admin/analytics", {
+        const res = await fetch("/admin/analytics", {
             headers: { "Authorization": "Bearer " + token }
         });
         if (!res.ok) throw new Error("Failed to fetch analytics");

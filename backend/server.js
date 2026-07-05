@@ -90,6 +90,11 @@ const complaintSchema = new mongoose.Schema({
   }
 });
 
+// Optimization Indexes for fast lookups
+complaintSchema.index({ email: 1 });
+complaintSchema.index({ branch: 1, status: 1, upvotes: -1, _id: -1 });
+complaintSchema.index({ room: 1, status: 1 });
+
 const Complaint = mongoose.model("Complaint", complaintSchema);
 
 const userSchema = new mongoose.Schema({
@@ -108,6 +113,7 @@ const otpSchema = new mongoose.Schema({
   otp: { type: String, required: true },
   createdAt: { type: Date, default: Date.now, expires: 300 }
 });
+otpSchema.index({ email: 1, otp: 1 });
 const OTP = mongoose.model("OTP", otpSchema);
 
 const resetOtpSchema = new mongoose.Schema({
@@ -115,6 +121,7 @@ const resetOtpSchema = new mongoose.Schema({
   otp: { type: String, required: true },
   createdAt: { type: Date, default: Date.now, expires: 300 }
 });
+resetOtpSchema.index({ email: 1, otp: 1 });
 const ResetOTP = mongoose.model("ResetOTP", resetOtpSchema);
 
 const notificationSchema = new mongoose.Schema({
@@ -123,6 +130,7 @@ const notificationSchema = new mongoose.Schema({
   isRead: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
+notificationSchema.index({ email: 1, isRead: 1, createdAt: -1 });
 const Notification = mongoose.model("Notification", notificationSchema);
 
 // ==========================
@@ -418,13 +426,13 @@ app.post("/login", async (req, res) => {
   try {
     const { identifier, password, role } = req.body;
 
-    // Find user by either email or enrollment number
+    // Find user by either email or enrollment number (optimized with lean)
     const user = await User.findOne({
       $or: [
         { email: identifier },
         { enrollment: identifier }
       ]
-    });
+    }).lean();
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials ❌" });
     }
@@ -469,7 +477,7 @@ app.post("/forgot-password", async (req, res) => {
       return res.status(400).json({ error: "Email is required ⚠️" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
     if (!user) {
       return res.status(404).json({ error: "No account found with this email ❌" });
     }
@@ -523,7 +531,7 @@ app.post("/reset-password", async (req, res) => {
       return res.status(400).json({ error: "All fields are required ⚠️" });
     }
 
-    const record = await ResetOTP.findOne({ email, otp });
+    const record = await ResetOTP.findOne({ email, otp }).lean();
     if (!record) {
       return res.status(400).json({ error: "Invalid or expired reset code ❌" });
     }
@@ -584,7 +592,7 @@ app.put("/update-profile", verifyToken, async (req, res) => {
 // ==========================
 app.get("/me", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user.id).select("-password").lean();
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user);
   } catch (err) {
@@ -733,7 +741,7 @@ app.get("/check-similarity", verifyToken, async (req, res) => {
     const activeComplaints = await Complaint.find({
       room: { $regex: new RegExp("^" + room.trim() + "$", "i") },
       status: { $in: ["Pending", "In Progress"] }
-    });
+    }).lean();
 
     let bestMatch = null;
     let highestScore = 0;
@@ -830,7 +838,7 @@ app.get("/my-complaints", verifyToken, async (req, res) => {
   try {
     const complaints = await Complaint.find({
       email: req.user.email
-    }).sort({ _id: -1 });
+    }).sort({ _id: -1 }).lean();
 
     res.json(complaints);
   } catch (err) {
@@ -843,7 +851,7 @@ app.get("/my-complaints", verifyToken, async (req, res) => {
 // ==========================
 app.get("/class-complaints", verifyToken, async (req, res) => {
   try {
-    const complaints = await Complaint.find({ branch: req.user.branch, status: "Pending" }).sort({ upvotes: -1, _id: -1 });
+    const complaints = await Complaint.find({ branch: req.user.branch, status: "Pending" }).sort({ upvotes: -1, _id: -1 }).lean();
     res.json(complaints);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
@@ -910,7 +918,7 @@ app.post("/complaint/:id/comment", verifyToken, async (req, res) => {
         console.log(`[SMS/WhatsApp Alert] Comment alert sent to student phone ${complaint.phone || "N/A"}: "${text.substring(0, 35)}..."`);
       }
     } else {
-      const admins = await User.find({ role: "admin" });
+      const admins = await User.find({ role: "admin" }).lean();
       for (const admin of admins) {
         const notif = new Notification({
           email: admin.email,
@@ -940,7 +948,7 @@ app.post("/complaint/:id/comment", verifyToken, async (req, res) => {
 // ==========================
 app.get("/admin/analytics", verifyToken, verifyAdmin, async (req, res) => {
   try {
-    const complaints = await Complaint.find({});
+    const complaints = await Complaint.find({}).lean();
 
     let pendingCount = 0;
     let inProgressCount = 0;
@@ -1042,7 +1050,7 @@ app.get("/admin/analytics", verifyToken, verifyAdmin, async (req, res) => {
 // ==========================
 app.get("/notifications", verifyToken, async (req, res) => {
   try {
-    const notifs = await Notification.find({ email: req.user.email, isRead: false }).sort({ createdAt: -1 });
+    const notifs = await Notification.find({ email: req.user.email, isRead: false }).sort({ createdAt: -1 }).lean();
     res.json(notifs);
   } catch (err) {
     res.status(500).json({ error: "Error fetching notifications" });

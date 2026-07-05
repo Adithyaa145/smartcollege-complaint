@@ -191,7 +191,7 @@
 
         try {
             // 1. Fetch Profile Data
-            const profileRes = await fetch("https://smartcollege-complaint.onrender.com/me", {
+            const profileRes = await fetch("/me", {
                 headers: { "Authorization": "Bearer " + token }
             });
             if (!profileRes.ok) {
@@ -217,7 +217,7 @@
             document.getElementById("profileImage").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128&bold=true`;
 
             // 2. Fetch Personal Complaints Stats
-            const complaintsRes = await fetch("https://smartcollege-complaint.onrender.com/my-complaints", {
+            const complaintsRes = await fetch("/my-complaints", {
                 headers: { "Authorization": "Bearer " + token }
             });
             
@@ -290,7 +290,7 @@
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("https://smartcollege-complaint.onrender.com/update-profile", {
+            const res = await fetch("/update-profile", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -360,7 +360,7 @@
         if (!token) return;
 
         try {
-            const res = await fetch("https://smartcollege-complaint.onrender.com/notifications", {
+            const res = await fetch("/notifications", {
                 headers: { "Authorization": "Bearer " + token }
             });
             if (res.ok) {
@@ -423,7 +423,7 @@
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const markRes = await fetch("https://smartcollege-complaint.onrender.com/notifications/read-all", {
+                    const markRes = await fetch("/notifications/read-all", {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",

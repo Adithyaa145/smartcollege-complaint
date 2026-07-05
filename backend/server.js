@@ -290,7 +290,7 @@ app.post("/submit-complaint", verifyToken, upload.single("image"), async (req, r
       category: req.body.category,
       role: req.user.role,
       branch: req.user.branch,
-      image: req.file ? req.file.filename : null,
+      image: req.body.image || (req.file ? req.file.filename : null),
       priority: aiResult.priority,
       summary: aiResult.summary,
       sentiment: aiResult.sentiment,

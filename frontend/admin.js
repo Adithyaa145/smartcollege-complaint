@@ -14,6 +14,14 @@ const API_BASE = (() => {
     }
     return 'https://smartcollege-complaint.onrender.com';
 })();
+
+function getImageUrl(image) {
+    if (!image) return '';
+    if (image.startsWith('data:image/')) {
+        return image;
+    }
+    return `${API_BASE}/uploads/${image}`;
+}
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "index.html";
 
@@ -342,8 +350,8 @@ function showDetails(c) {
         imageHtml = `
             <div class="image-box">
                 <h4>Attachment</h4>
-                <div class="image-preview-wrapper" onclick="zoomImage('${API_BASE}/uploads/${c.image}')">
-                    <img src="${API_BASE}/uploads/${c.image}" alt="Attachment Preview"/>
+                <div class="image-preview-wrapper" onclick="zoomImage('${getImageUrl(c.image)}')">
+                    <img src="${getImageUrl(c.image)}" alt="Attachment Preview"/>
                     <div class="image-overlay">
                         <i class="fa-solid fa-expand"></i> Click to enlarge
                     </div>

@@ -19,6 +19,14 @@ const API_BASE = (() => {
     return 'https://smartcollege-complaint.onrender.com';
 })();
 
+function getImageUrl(image) {
+    if (!image) return '';
+    if (image.startsWith('data:image/')) {
+        return image;
+    }
+    return `${API_BASE}/uploads/${image}`;
+}
+
 // Category → icon map
 const CATEGORY_ICONS = {
     classroom:   { icon: 'fa-chalkboard',      bg: '#eff6ff', color: '#3b82f6' },
@@ -274,7 +282,7 @@ async function openComplaintDetailsModal(c) {
                 <div style="margin-top: 15px; text-align: left;">
                     <label style="font-size: 13px; font-weight: 700; color: #0f172a;">Attachment:</label>
                     <div style="margin-top: 6px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; max-height: 200px; display: flex; justify-content: center; background: #f8fafc;">
-                        <img src="${API_BASE}/uploads/${comp.image}" style="max-height: 200px; max-width: 100%; object-fit: contain;">
+                        <img src="${getImageUrl(comp.image)}" style="max-height: 200px; max-width: 100%; object-fit: contain;">
                     </div>
                 </div>
             `;

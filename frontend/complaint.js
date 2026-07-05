@@ -347,6 +347,25 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
         Submitting...
     `;
 
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    let base64Image = null;
+    const fileInput = document.getElementById("image");
+    if (fileInput.files.length > 0) {
+        try {
+            base64Image = await fileToBase64(fileInput.files[0]);
+        } catch (err) {
+            console.error("Base64 conversion error:", err);
+        }
+    }
+
     // Build form payload
     const formData = new FormData();
     formData.append("student_name", user.name);
@@ -359,9 +378,8 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     formData.append("description",  descVal);
     formData.append("ocrText",      lastOcrText || "");
 
-    const fileInput = document.getElementById("image");
-    if (fileInput.files.length > 0) {
-        formData.append("image", fileInput.files[0]);
+    if (base64Image) {
+        formData.append("image", base64Image);
     }
 
     try {

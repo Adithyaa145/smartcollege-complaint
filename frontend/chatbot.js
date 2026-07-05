@@ -1,7 +1,7 @@
 // ==========================================================
 // chatbot.js - SmartCollege Floating AI Helper Chatbot
 // ==========================================================
-const API_BASE = (() => {
+const CHATBOT_API_BASE = (() => {
     const proto = window.location.protocol;
     const host = window.location.hostname;
     const port = window.location.port;
@@ -9,8 +9,8 @@ const API_BASE = (() => {
     if (proto === 'file:') {
         return 'https://smartcollege-complaint.onrender.com';
     }
-    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3000') {
-        return 'http://localhost:3000';
+    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3001') {
+        return 'http://localhost:3001';
     }
     return '';
 })();
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch(API_BASE + "/chat", {
+            const res = await fetch(CHATBOT_API_BASE + "/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

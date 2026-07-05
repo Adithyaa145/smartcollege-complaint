@@ -10,8 +10,8 @@ const API_BASE = (() => {
     if (proto === 'file:') {
         return 'https://smartcollege-complaint.onrender.com';
     }
-    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3000') {
-        return 'http://localhost:3000';
+    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3001') {
+        return 'http://localhost:3001';
     }
     return '';
 })();

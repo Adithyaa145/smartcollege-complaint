@@ -2,7 +2,19 @@
    my.complaint.js  –  SmartCollege Complaint System
    My Submissions page (Students + Faculty)
 =================================================== */
-const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
+const API_BASE = (() => {
+    const proto = window.location.protocol;
+    const host = window.location.hostname;
+    const port = window.location.port;
+
+    if (proto === 'file:') {
+        return 'https://smartcollege-complaint.onrender.com';
+    }
+    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3000') {
+        return 'http://localhost:3000';
+    }
+    return '';
+})();
 
 // Category → icon map
 const CATEGORY_ICONS = {

@@ -267,7 +267,19 @@ body {
 </style>
 
 <script>
-const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
+const API_BASE = (() => {
+    const proto = window.location.protocol;
+    const host = window.location.hostname;
+    const port = window.location.port;
+
+    if (proto === 'file:') {
+        return 'https://smartcollege-complaint.onrender.com';
+    }
+    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3000') {
+        return 'http://localhost:3000';
+    }
+    return '';
+})();
 document.addEventListener("DOMContentLoaded", () => {
     const roleSelect = document.getElementById("role");
     const enrollmentGroup = document.getElementById("enrollmentGroup");
@@ -329,7 +341,7 @@ async function handleRegister(event) {
         console.error("Error connecting to server:", error);
         Swal.fire({
             title: 'Error',
-            text: 'Could not connect to the server.',
+            text: `Could not connect to the server. Details: ${error.message}`,
             icon: 'error',
             confirmButtonColor: '#4f46e5'
         });

@@ -1,4 +1,16 @@
-const API_BASE = window.location.protocol === 'file:' ? 'https://smartcollege-complaint.onrender.com' : '';
+const API_BASE = (() => {
+    const proto = window.location.protocol;
+    const host = window.location.hostname;
+    const port = window.location.port;
+
+    if (proto === 'file:') {
+        return 'https://smartcollege-complaint.onrender.com';
+    }
+    if ((host === 'localhost' || host === '127.0.0.1') && port !== '3000') {
+        return 'http://localhost:3000';
+    }
+    return '';
+})();
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "index.html";
 

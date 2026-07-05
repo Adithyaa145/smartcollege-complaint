@@ -19,7 +19,7 @@ document.getElementById("form").addEventListener("submit", async (e) => {
   formData.append("student_name", document.getElementById("name").value);
 
   try {
-    const res = await fetch("http://localhost:3000/submit", {
+    const res = await fetch("https://smartcollege-complaint.onrender.com/submit", {
       method: "POST",
       body: formData
     });

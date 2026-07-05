@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 
     try {
-        const res = await fetch(`http://localhost:3000/class-complaints`, {
+        const res = await fetch(`https://smartcollege-complaint.onrender.com/class-complaints`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function upvoteComplaint(id) {
     const token = localStorage.getItem("token");
     try {
-        const res = await fetch(`http://localhost:3000/complaint/${id}/vote`, {
+        const res = await fetch(`https://smartcollege-complaint.onrender.com/complaint/${id}/vote`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`

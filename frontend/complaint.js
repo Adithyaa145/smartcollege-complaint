@@ -349,7 +349,7 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     }
 
     try {
-        const res = await fetch("http://localhost:3000/submit-complaint", {
+        const res = await fetch("https://smartcollege-complaint.onrender.com/submit-complaint", {
             method: "POST",
             body: formData,
             headers: { "Authorization": "Bearer " + token }

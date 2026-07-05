@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // ── Fetch complaints ──────────────────────────
     try {
-        const res = await fetch('http://localhost:3000/my-complaints', {
+        const res = await fetch('https://smartcollege-complaint.onrender.com/my-complaints', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -258,7 +258,7 @@ async function openComplaintDetailsModal(c) {
                 <div style="margin-top: 15px; text-align: left;">
                     <label style="font-size: 13px; font-weight: 700; color: #0f172a;">Attachment:</label>
                     <div style="margin-top: 6px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; max-height: 200px; display: flex; justify-content: center; background: #f8fafc;">
-                        <img src="http://localhost:3000/uploads/${comp.image}" style="max-height: 200px; max-width: 100%; object-fit: contain;">
+                        <img src="https://smartcollege-complaint.onrender.com/uploads/${comp.image}" style="max-height: 200px; max-width: 100%; object-fit: contain;">
                     </div>
                 </div>
             `;
@@ -374,7 +374,7 @@ async function openComplaintDetailsModal(c) {
         if (!text) return;
 
         try {
-            const res = await fetch(`http://localhost:3000/complaint/${id}/comment`, {
+            const res = await fetch(`https://smartcollege-complaint.onrender.com/complaint/${id}/comment`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -396,7 +396,7 @@ async function openComplaintDetailsModal(c) {
                 }
                 
                 // Reload list in background to reflect comments count or updates locally
-                const reloadRes = await fetch('http://localhost:3000/my-complaints', {
+                const reloadRes = await fetch('https://smartcollege-complaint.onrender.com/my-complaints', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (reloadRes.ok) {
@@ -434,7 +434,7 @@ async function openComplaintDetailsModal(c) {
         if (!confirmResult.isConfirmed) return;
 
         try {
-            const res = await fetch(`http://localhost:3000/delete/${id}`, {
+            const res = await fetch(`https://smartcollege-complaint.onrender.com/delete/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": "Bearer " + token }
             });
@@ -468,7 +468,7 @@ async function checkNotifications() {
     if (!token) return;
 
     try {
-        const res = await fetch("http://localhost:3000/notifications", {
+        const res = await fetch("https://smartcollege-complaint.onrender.com/notifications", {
             headers: { "Authorization": "Bearer " + token }
         });
         if (res.ok) {
@@ -531,7 +531,7 @@ async function showNotificationsFeed() {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const markRes = await fetch("http://localhost:3000/notifications/read-all", {
+                const markRes = await fetch("https://smartcollege-complaint.onrender.com/notifications/read-all", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

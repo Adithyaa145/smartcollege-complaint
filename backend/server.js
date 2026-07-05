@@ -128,7 +128,13 @@ const Notification = mongoose.model("Notification", notificationSchema);
 // ==========================
 // 📁 STATIC FOLDER
 // ==========================
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+const fs = require("fs");
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+app.use("/uploads", express.static(uploadsDir));
 app.use("/", express.static(path.join(__dirname, "../frontend")));
 
 // ==========================
@@ -136,7 +142,7 @@ app.use("/", express.static(path.join(__dirname, "../frontend")));
 // ==========================
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "uploads"));
+    cb(null, uploadsDir);
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));

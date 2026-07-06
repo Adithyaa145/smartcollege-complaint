@@ -205,39 +205,65 @@
             return;
         }
 
+        // Render from localStorage immediately to make page transition instant
+        const cachedUser = localStorage.getItem("user");
+        if (cachedUser) {
+            try {
+                const user = JSON.parse(cachedUser);
+                document.getElementById("name").innerText = user.name;
+                document.getElementById("navUserName").innerText = user.name;
+                document.getElementById("emailDetail").innerHTML = `<i class="fa-regular fa-envelope"></i> ` + user.email;
+                document.getElementById("branchDetail").innerHTML = `<i class="fa-solid fa-sitemap"></i> ` + (user.branch || 'CSE');
+                
+                const roleBadge = document.getElementById("roleBadge");
+                roleBadge.innerText = user.role.toUpperCase();
+                roleBadge.className = `role-badge ${user.role.toLowerCase()}`;
+
+                // Update Avatar image initials
+                document.getElementById("profileImage").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128&bold=true`;
+            } catch (e) {
+                console.error("Error parsing cached user:", e);
+            }
+        }
+
         try {
-            // 1. Fetch Profile Data
-            const profileRes = await fetch(API_BASE + "/me", {
-                headers: { "Authorization": "Bearer " + token }
-            });
-            if (!profileRes.ok) {
-                localStorage.clear();
-                window.location.href = "index.html";
-                return;
+            // Fetch updated profile data and personal complaints stats in parallel
+            const [profileRes, complaintsRes] = await Promise.all([
+                fetch(API_BASE + "/me", {
+                    headers: { "Authorization": "Bearer " + token }
+                }).catch(err => { console.error("Me fetch error:", err); return null; }),
+                fetch(API_BASE + "/my-complaints", {
+                    headers: { "Authorization": "Bearer " + token }
+                }).catch(err => { console.error("Complaints fetch error:", err); return null; })
+            ]);
+
+            if (profileRes) {
+                if (!profileRes.ok) {
+                    if (profileRes.status === 401 || profileRes.status === 403) {
+                        localStorage.clear();
+                        window.location.href = "index.html";
+                        return;
+                    }
+                } else {
+                    const user = await profileRes.json();
+                    localStorage.setItem("user", JSON.stringify(user));
+                    
+                    // Render/update user details with fresh data
+                    document.getElementById("name").innerText = user.name;
+                    document.getElementById("navUserName").innerText = user.name;
+                    document.getElementById("emailDetail").innerHTML = `<i class="fa-regular fa-envelope"></i> ` + user.email;
+                    document.getElementById("branchDetail").innerHTML = `<i class="fa-solid fa-sitemap"></i> ` + (user.branch || 'CSE');
+                    
+                    const roleBadge = document.getElementById("roleBadge");
+                    roleBadge.innerText = user.role.toUpperCase();
+                    roleBadge.className = `role-badge ${user.role.toLowerCase()}`;
+
+                    // Update Avatar image initials
+                    document.getElementById("profileImage").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128&bold=true`;
+                }
             }
             
-            const user = await profileRes.json();
-            localStorage.setItem("user", JSON.stringify(user));
-            
-            // Render user details
-            document.getElementById("name").innerText = user.name;
-            document.getElementById("navUserName").innerText = user.name;
-            document.getElementById("emailDetail").innerHTML = `<i class="fa-regular fa-envelope"></i> ` + user.email;
-            document.getElementById("branchDetail").innerHTML = `<i class="fa-solid fa-sitemap"></i> ` + (user.branch || 'CSE');
-            
-            const roleBadge = document.getElementById("roleBadge");
-            roleBadge.innerText = user.role.toUpperCase();
-            roleBadge.className = `role-badge ${user.role.toLowerCase()}`;
-
-            // Update Avatar image initials
-            document.getElementById("profileImage").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128&bold=true`;
-
-            // 2. Fetch Personal Complaints Stats
-            const complaintsRes = await fetch(API_BASE + "/my-complaints", {
-                headers: { "Authorization": "Bearer " + token }
-            });
-            
-            if (complaintsRes.ok) {
+            if (complaintsRes && complaintsRes.ok) {
                 const complaints = await complaintsRes.json();
                 document.getElementById("stat-total").innerText = complaints.length;
                 document.getElementById("stat-pending").innerText = complaints.filter(c => c.status !== "Resolved").length;

@@ -25,6 +25,24 @@ function getImageUrl(image) {
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "index.html";
 
+// Render user details dynamically in the sidebar footer if cached
+const cachedUser = localStorage.getItem("user");
+if (cachedUser) {
+    try {
+        const user = JSON.parse(cachedUser);
+        const nameEl = document.querySelector(".sidebar .user-name");
+        const roleEl = document.querySelector(".sidebar .user-role");
+        const avatarEl = document.querySelector(".sidebar .user-info img");
+        if (nameEl) nameEl.innerText = user.name;
+        if (roleEl) roleEl.innerText = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+        if (avatarEl) {
+            avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&bold=true`;
+        }
+    } catch (e) {
+        console.error("Error rendering sidebar user details:", e);
+    }
+}
+
 let allComplaints = [];
 let currentRoleFilter = 'all';
 let currentStatusFilter = 'all';

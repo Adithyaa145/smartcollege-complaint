@@ -689,7 +689,7 @@ app.put("/update/:id", verifyToken, verifyAdmin, async (req, res) => {
       });
       await notif.save();
 
-      await sendNotificationEmail(
+      sendNotificationEmail(
         complaint.email,
         "SmartCollege - Complaint Status Update",
         `Hello,\n\nYour complaint for Room ${complaint.room} (${complaint.category || "General"}) has been updated to status: "${status}".\n\nTrack progress on your student portal.`
@@ -922,7 +922,7 @@ app.post("/complaint/:id/comment", verifyToken, async (req, res) => {
         });
         await notif.save();
 
-        await sendNotificationEmail(
+        sendNotificationEmail(
           complaint.email,
           "SmartCollege - New Comment on your Complaint",
           `Hello,\n\nA new comment has been posted by ${senderName} on your complaint for Room ${complaint.room}:\n\n"${text}"\n\nTrack progress on your student dashboard.`
@@ -939,7 +939,7 @@ app.post("/complaint/:id/comment", verifyToken, async (req, res) => {
         });
         await notif.save();
 
-        await sendNotificationEmail(
+        sendNotificationEmail(
           admin.email,
           "SmartCollege Admin - New Student Comment",
           `Hello Admin,\n\nStudent ${senderName} commented on Room ${complaint.room} complaint:\n\n"${text}"\n\nOpen Admin Panel to view/respond.`
